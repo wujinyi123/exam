@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.exam.system.mapper.userMessage.UserMapper">
+    <!--用户登录-->
+    <select id="login" parameterType="com.system.exam.domain.qo.userMessage.LoginMsgQO" resultType="com.system.exam.domain.dto.userMessage.UserDTO">
+        SELECT
+            id,number,password,name,sex,tel,email,img_path,state
+        FROM
+        <choose>
+            <when test="userType=='admin'.toString()">
+                admin
+            </when>
+            <when test="userType=='teacher'.toString()">
+                teacher
+            </when>
+            <otherwise>
+                student
+            </otherwise>
+        </choose>
+        WHERE state='1' AND number=#{number} AND password=#{password}
+    </select>
+</mapper>
