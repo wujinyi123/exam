@@ -6,7 +6,7 @@ package com.system.exam.common;
 public interface IUserSession {
     /**
      * 生成uuid(token)，并把用户存入Redis
-     * 默认项目名字token
+     * 默认名字token
      * @param obj
      * @param <T>
      * @return
@@ -16,15 +16,15 @@ public interface IUserSession {
     /**
      * 生成uuid(token)，并把用户存入Redis
      * @param obj
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
-    <T> String saveUser(T obj, String projectName);
+    <T> String saveUser(T obj, String key);
 
     /**
      * 生成uuid(token)，并把用户存入Redis
-     * 默认项目名字token
+     * 默认名字token
      * @param obj
      * @param time
      * @param <T>
@@ -35,16 +35,16 @@ public interface IUserSession {
     /**
      * 生成uuid(token)，并把用户存入Redis
      * @param obj
-     * @param projectName
+     * @param key
      * @param time
      * @param <T>
      * @return
      */
-    <T> String saveUser(T obj, String projectName, int time);
+    <T> String saveUser(T obj, String key, int time);
 
     /**
      * 获取当前用户
-     * 默认项目名字token
+     * 默认名字token
      * @param <T>
      * @return
      */
@@ -52,15 +52,15 @@ public interface IUserSession {
 
     /**
      * 获取当前用户
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
-    <T> T getUser(String projectName);
+    <T> T getUser(String key);
 
     /**
      * 删除uuid(token)对应的对象
-     * 默认项目名字token
+     * 默认名字token
      * @param <T>
      * @return
      */
@@ -68,24 +68,33 @@ public interface IUserSession {
 
     /**
      * 删除uuid(token)对应的对象
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
-    <T> boolean deleteUser(String projectName);
+    <T> boolean deleteUser(String key);
 
     /**
      * 从cookie中获取uuid(token)
-     * 默认项目名字token
+     * 默认名字token
      * @return
      */
     String getUserToken();
 
     /**
      * 从cookie中获取uuid(token)
-     * @param projectName
+     * @param key
      * @return
      */
-    String getUserToken(String projectName);
+    String getUserToken(String key);
+
+    /**
+     * 通过key和token获取用户信息
+     * @param key
+     * @param token
+     * @param <T>
+     * @return
+     */
+    <T> T getUserByKeyToken(String key, String token);
 
 }

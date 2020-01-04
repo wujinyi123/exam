@@ -24,7 +24,7 @@ public class UserSessionImpl implements IUserSession {
 
     /**
      * 生成uuid(token)，并把用户存入Redis
-     * 默认项目名字token
+     * 默认名字token
      * @param obj
      * @param <T>
      * @return
@@ -37,13 +37,13 @@ public class UserSessionImpl implements IUserSession {
     /**
      * 生成uuid(token)，并把用户存入Redis
      * @param obj
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
     @Override
-    public <T> String saveUser(T obj, String projectName) {
-        return saveUser(obj, projectName, 30);
+    public <T> String saveUser(T obj, String key) {
+        return saveUser(obj, key, 30);
     }
 
     /**
@@ -62,14 +62,14 @@ public class UserSessionImpl implements IUserSession {
     /**
      * 生成uuid(token)，并把用户存入Redis
      * @param obj
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
     @Override
-    public <T> String saveUser(T obj, String projectName, int time) {
+    public <T> String saveUser(T obj, String key, int time) {
         String uuid = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set(projectName+":"+uuid, obj, time, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key+":"+uuid, obj, time, TimeUnit.MINUTES);
         return uuid;
     }
 
@@ -86,15 +86,15 @@ public class UserSessionImpl implements IUserSession {
 
     /**
      * 获取当前用户
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
     @Override
-    public <T> T getUser(String projectName) {
-        String token = getUserToken(projectName);
+    public <T> T getUser(String key) {
+        String token = getUserToken(key);
         if (token != null) {
-            return (T)redisTemplate.opsForValue().get(projectName + ":" + token);
+            return (T)redisTemplate.opsForValue().get(key + ":" + token);
         }
         return null;
     }
@@ -112,18 +112,18 @@ public class UserSessionImpl implements IUserSession {
 
     /**
      * 删除uuid(token)对应的对象
-     * @param projectName
+     * @param key
      * @param <T>
      * @return
      */
     @Override
-    public <T> boolean deleteUser(String projectName) {
-        String token = getUserToken(projectName);
-        T t = (T)redisTemplate.opsForValue().get(projectName+":"+token);
+    public <T> boolean deleteUser(String key) {
+        String token = getUserToken(key);
+        T t = (T)redisTemplate.opsForValue().get(key+":"+token);
         if (t == null) {
             return false;
         } else {
-            redisTemplate.opsForValue().set(projectName+":"+token,null);
+            redisTemplate.opsForValue().set(key+":"+token,null);
             return true;
         }
     }
@@ -140,20 +140,31 @@ public class UserSessionImpl implements IUserSession {
 
     /**
      * 从cookie中获取uuid(token)
-     * @param projectName
+     * @param key
      * @return
      */
     @Override
-    public String getUserToken(String projectName) {
+    public String getUserToken(String key) {
         Cookie[] cookies = request.getCookies();
         String token = "";
         for (Cookie cookie : cookies) {
-            if (projectName.equals(cookie.getName())) {
+            if (key.equals(cookie.getName())) {
                 token = cookie.getValue();
                 break;
             }
         }
         return token;
+    }
+
+    /**
+     * 通过key和token获取用户信息
+     * @param key
+     * @param token
+     * @param <T>
+     * @return
+     */
+    public <T> T getUserByKeyToken(String key, String token) {
+        return (T)redisTemplate.opsForValue().get(key + ":" + token);
     }
 
 }
