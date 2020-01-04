@@ -1,9 +1,11 @@
-package com.system.exam.domain.dto.userMessage;
+package com.system.exam.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * 用户信息DTO
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+public class UserDTO implements Serializable {
     /**
      * 用户id
      */

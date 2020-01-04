@@ -1,4 +1,4 @@
-package com.system.exam.domain.qo.userMessage;
+package com.system.exam.domain.qo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginMsgQO {
+public class LoginQO {
     /**
      * 账号
      */
@@ -44,4 +44,5 @@ public class LoginMsgQO {
      */
     @NotBlank(message = "正确的验证码不能为空")
     private String trueCode;
+
 }

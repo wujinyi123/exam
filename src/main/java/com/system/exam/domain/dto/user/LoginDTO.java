@@ -1,4 +1,4 @@
-package com.system.exam.domain.dto.userMessage;
+package com.system.exam.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,15 +12,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginMsgDTO {
+public class LoginDTO {
     /**
      * 状态信息  ok：成功，no：失败
      */
     private String state;
 
     /**
-     * 登录失败的信息
+     * 登录信息
      */
-    private String erro;
+    private String msg;
+
+    /**
+     * 用户类型
+     */
+    private String userType;
 
 }
