@@ -24,6 +24,5 @@ public class UserQO {
     /**
      * token
      */
-    @NotBlank(message = "token不能为空")
     private String token;
 }

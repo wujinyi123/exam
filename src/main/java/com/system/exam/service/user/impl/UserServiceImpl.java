@@ -10,6 +10,7 @@ import com.system.exam.service.user.UserService;
 import com.system.exam.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -55,7 +56,11 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public UserDTO getUserMsg(UserQO userQO) {
-        return userSession.getUserByKeyToken(userQO.getUserType()+"ExamSystem", userQO.getToken());
+        if (StringUtils.isEmpty(userQO.getToken())) {
+            return userSession.getUser(userQO.getUserType()+"ExamSystem");
+        } else {
+            return userSession.getUserByKeyToken(userQO.getUserType()+"ExamSystem", userQO.getToken());
+        }
     }
 
 }
