@@ -1,8 +1,7 @@
 package com.system.exam.service.user;
 
-import com.system.exam.common.ResultEnums;
 import com.system.exam.domain.dto.user.LoginDTO;
-import com.system.exam.domain.dto.user.StudentInfoDTO;
+import com.system.exam.domain.dto.user.UserInfoDTO;
 import com.system.exam.domain.dto.user.UdateDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
@@ -28,10 +27,10 @@ public interface UserService {
     UserDTO getUserMsg(UserQO userQO);
 
     /**
-     * 获取当前用户（学生）个人资料
+     * 获取当前用户个人资料
      * @return
      */
-    StudentInfoDTO getStudentInfo();
+    UserInfoDTO getUserInfo(UserQO userQO);
 
     /**
      * 修改密码

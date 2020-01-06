@@ -2,7 +2,7 @@ package com.system.exam.service.user.impl;
 
 import com.system.exam.common.IUserSession;
 import com.system.exam.domain.dto.user.LoginDTO;
-import com.system.exam.domain.dto.user.StudentInfoDTO;
+import com.system.exam.domain.dto.user.UserInfoDTO;
 import com.system.exam.domain.dto.user.UdateDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
@@ -67,16 +67,21 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 获取当前用户（学生）个人资料
+     * 获取当前用户个人资料
      * @return
      */
     @Override
-    public StudentInfoDTO getStudentInfo() {
-        UserDTO userDTO = userSession.getUser("studentExamSystem");
+    public UserInfoDTO getUserInfo(UserQO userQO) {
+        UserDTO userDTO = userSession.getUser(userQO.getUserType()+"ExamSystem");
         if (userDTO==null) {
             return null;
         } else {
-            return userMapper.getStudentInfo(userDTO.getNumber());
+            switch (userQO.getUserType()) {
+                case "admin" : return userMapper.getAdminInfo(userDTO.getNumber());
+                case "teacher" : return userMapper.getTeacherInfo(userDTO.getNumber());
+                case "student" : return userMapper.getStudentInfo(userDTO.getNumber());
+                default : return null;
+            }
         }
     }
 
@@ -115,11 +120,13 @@ public class UserServiceImpl implements UserService {
             return new UdateDTO("no", "未发现改动");
         }
         if (userMapper.udateTelEmail(udateQO)>0) {
+            userDTO.setTel(udateQO.getTel());
+            userDTO.setEmail(udateQO.getEmail());
+            userSession.updateUser(udateQO.getUserType()+"ExamSystem", userDTO);
             return new UdateDTO("ok", "修改成功");
         } else {
             return new UdateDTO("no", "系统异常");
         }
     }
-
 
 }

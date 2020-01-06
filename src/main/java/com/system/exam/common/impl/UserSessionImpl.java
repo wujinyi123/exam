@@ -167,4 +167,22 @@ public class UserSessionImpl implements IUserSession {
         return (T)redisTemplate.opsForValue().get(key + ":" + token);
     }
 
+    /**
+     * 更新用户
+     * @param key
+     * @param obj
+     * @param <T>
+     * @return
+     */
+    @Override
+    public <T> boolean updateUser(String key, T obj) {
+        String token = getUserToken(key);
+        if (token != null) {
+            redisTemplate.opsForValue().set(key + ":" + token, obj);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

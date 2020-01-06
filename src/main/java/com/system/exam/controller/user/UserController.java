@@ -3,7 +3,7 @@ package com.system.exam.controller.user;
 import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
 import com.system.exam.domain.dto.user.LoginDTO;
-import com.system.exam.domain.dto.user.StudentInfoDTO;
+import com.system.exam.domain.dto.user.UserInfoDTO;
 import com.system.exam.domain.dto.user.UdateDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
@@ -50,12 +50,12 @@ public class UserController {
     }
 
     /**
-     * 获取当前用户（学生）个人资料
+     * 获取当前用户个人资料
      * @return
      */
-    @PostMapping("/getStudentInfo")
-    public ResponseData<StudentInfoDTO> getStudentInfo() {
-        return ResponseDataUtil.buildSuccess(userService.getStudentInfo());
+    @PostMapping("/getUserInfo")
+    public ResponseData<UserInfoDTO> getUserInfo(@RequestBody @Valid UserQO userQO) {
+        return ResponseDataUtil.buildSuccess(userService.getUserInfo(userQO));
     }
 
     /**

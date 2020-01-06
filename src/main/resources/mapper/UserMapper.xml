@@ -16,8 +16,35 @@
         WHERE state='1' AND number=#{number} AND password=#{password}
     </select>
 
+    <!--获取当前用户（管理员）个人资料-->
+    <select id="getAdminInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
+        SELECT
+            t.number number,
+            t.name name,
+            t.sex sex,
+            t.tel tel,
+            t.email email,
+            t.img_path img
+        FROM admin t
+        WHERE t.state='1' AND t.number=#{number}
+    </select>
+
+    <!--获取当前用户（教师）个人资料-->
+    <select id="getTeacherInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
+        SELECT
+            (SELECT name FROM college WHERE id=t.college_id) college,
+            t.number number,
+            t.name name,
+            t.sex sex,
+            t.tel tel,
+            t.email email,
+            t.img_path img
+        FROM teacher t
+        WHERE t.state='1' AND t.number=#{number}
+    </select>
+
     <!--获取当前用户（学生）个人资料-->
-    <select id="getStudentInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.StudentInfoDTO">
+    <select id="getStudentInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
             (SELECT name FROM college WHERE id=stu.college_id) college,
             (SELECT name FROM clazz WHERE id=stu.clazz_id) major,

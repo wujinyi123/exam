@@ -97,4 +97,12 @@ public interface IUserSession {
      */
     <T> T getUserByKeyToken(String key, String token);
 
+    /**
+     * 更新用户
+     * @param key
+     * @param obj
+     * @return
+     */
+    <T> boolean updateUser(String key, T obj);
+
 }

@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 学生个人资料DTO
+ * 个人资料DTO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentInfoDTO {
+public class UserInfoDTO {
     /**
      * 学院
      */
