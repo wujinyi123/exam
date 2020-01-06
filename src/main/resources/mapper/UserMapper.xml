@@ -9,17 +9,49 @@
         id,number,password,name,sex,tel,email,img_path,state
         FROM
         <choose>
-            <when test="userType=='admin'.toString()">
-                admin
-            </when>
-            <when test="userType=='teacher'.toString()">
-                teacher
-            </when>
-            <otherwise>
-                student
-            </otherwise>
+            <when test="userType=='admin'.toString()">admin</when>
+            <when test="userType=='teacher'.toString()">teacher</when>
+            <otherwise>student</otherwise>
         </choose>
         WHERE state='1' AND number=#{number} AND password=#{password}
     </select>
+
+    <!--获取当前用户（学生）个人资料-->
+    <select id="getStudentInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.StudentInfoDTO">
+        SELECT
+            (SELECT name FROM college WHERE id=stu.college_id) college,
+            (SELECT name FROM clazz WHERE id=stu.clazz_id) major,
+            (SELECT number FROM clazz WHERE id=stu.clazz_id) clazz,
+            stu.number number,
+            stu.name name,
+            stu.sex sex,
+            stu.tel tel,
+            stu.email email,
+            stu.img_path img
+        FROM student stu
+        WHERE stu.state='1' AND stu.number=#{number}
+    </select>
+
+    <!--修改密码-->
+    <update id="udatePassword" parameterType="com.system.exam.domain.qo.user.UdateQO">
+        UPDATE
+        <choose>
+            <when test="userType=='admin'.toString()">admin</when>
+            <when test="userType=='teacher'.toString()">teacher</when>
+            <otherwise>student</otherwise>
+        </choose>
+        SET password=#{newPwd} WHERE number=#{number}
+    </update>
+
+    <!--修改电话和邮箱-->
+    <update id="udateTelEmail" parameterType="com.system.exam.domain.qo.user.UdateQO">
+        UPDATE
+        <choose>
+            <when test="userType=='admin'.toString()">admin</when>
+            <when test="userType=='teacher'.toString()">teacher</when>
+            <otherwise>student</otherwise>
+        </choose>
+        SET tel=#{tel},email=#{email} WHERE number=#{number}
+    </update>
 
 </mapper>
