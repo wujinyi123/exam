@@ -1,4 +1,4 @@
-package com.system.exam.domain.qo.user;
+package com.system.exam.domain.qo.exam;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,22 +8,28 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 用户信息QO
+ * 考试信息QO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserQO {
+public class ExamQO {
     /**
-     * 用户类型  admin：管理员，teacher：教师，student：学生
+     * 用户类型
      */
     @NotBlank(message = "用户类型不能为空")
     private String userType;
 
     /**
-     * token
+     * 考试码
      */
-    private String token;
+    @NotBlank(message = "考试码不能为空")
+    private String examCode;
+
+    /**
+     * 账号/学号
+     */
+    private String number;
 
 }

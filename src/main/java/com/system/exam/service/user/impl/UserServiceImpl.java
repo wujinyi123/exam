@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
         if (userDTO==null) {
             return null;
         } else {
+            //判断不同客户端
             switch (userQO.getUserType()) {
                 case "admin" : return userMapper.getAdminInfo(userDTO.getNumber());
                 case "teacher" : return userMapper.getTeacherInfo(userDTO.getNumber());
@@ -92,13 +93,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UdateDTO udatePassword(UdateQO udateQO) {
+        //获取当前用户
         UserDTO userDTO = userSession.getUser(udateQO.getUserType()+"ExamSystem");
+        //密码加密
         udateQO.setOldPwd(Md5Util.md5(udateQO.getOldPwd()));
         udateQO.setNewPwd(Md5Util.md5(udateQO.getNewPwd()));
-        udateQO.setNumber(userDTO.getNumber());
+        //得到账号/学号
         if (userDTO==null) {
             return new UdateDTO("no", "系统异常");
-        } else if (!udateQO.getOldPwd().equals(userDTO.getPassword())) {
+        } else {
+            udateQO.setNumber(userDTO.getNumber());
+        }
+        //判断密码是否正确
+        if (!udateQO.getOldPwd().equals(userDTO.getPassword())) {
             return new UdateDTO("no", "原密码不正确");
         } else if (userMapper.udatePassword(udateQO)>0) {
             return new UdateDTO("ok", "修改成功，请重新登录");
@@ -119,6 +126,7 @@ public class UserServiceImpl implements UserService {
         if (udateQO.getTel().equals(userDTO.getTel()) && udateQO.getEmail().equals(userDTO.getEmail())) {
             return new UdateDTO("no", "未发现改动");
         }
+        //修改成功后，用存回redis
         if (userMapper.udateTelEmail(udateQO)>0) {
             userDTO.setTel(udateQO.getTel());
             userDTO.setEmail(udateQO.getEmail());

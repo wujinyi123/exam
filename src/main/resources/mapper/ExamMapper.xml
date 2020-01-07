@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.exam.mapper.exam.ExamMapper">
+    <select id="getExamByCode" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
+        SELECT
+        tab.examCode examCode,
+        tab.examName examName,
+        tab.score score,
+        tab.teacherName teacherName,
+        tab.time time,
+        tab.pdDate pdDate,
+        tab.expDate expDate,
+        if(tab.remark='0' and tab.exp &lt; SYSDATE(),'2',tab.remark) remark
+        FROM
+        (SELECT
+        t.exam_code examCode,
+        t.exam_name examName,
+        t.score score,
+        (select
+        concat((select name from college WHERE id=te.college_id),',',te.name,'老师')
+        from teacher te
+        where te.number=t.teacher_number) teacherName,
+        concat(t.time,'分钟') time,
+        date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+        date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
+        t.exp_time exp,
+        (select count(1) from answer
+        where state='1' and exam_code=t.exam_code and student_number=#{number}) remark
+        FROM exam t where t.exam_code=#{examCode}) tab
+    </select>
+
+</mapper>
