@@ -42,7 +42,7 @@ public class ExamController {
      */
     @PostMapping("/getNewExam")
     public ResponseData<List<ExamDTO>> getNewExam(@RequestBody NewExamQO newExamQO) {
-        return ResponseDataUtil.buildSuccess(examService.getNewExam(newExamQO));
+        return ResponseDataUtil.buildSuccess(examService.getNewExam(newExamQO), newExamQO);
     }
 
 }
