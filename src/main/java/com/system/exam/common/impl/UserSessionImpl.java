@@ -4,6 +4,7 @@ import com.system.exam.common.IUserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -93,7 +94,7 @@ public class UserSessionImpl implements IUserSession {
     @Override
     public <T> T getUser(String key) {
         String token = getUserToken(key);
-        if (token != null) {
+        if (!StringUtils.isEmpty(token)) {
             return (T)redisTemplate.opsForValue().get(key + ":" + token);
         }
         return null;
