@@ -64,4 +64,9 @@ public class ExamDTO {
      */
     private String remark;
 
+    /**
+     * 我的成绩
+     */
+    private String myScore;
+
 }

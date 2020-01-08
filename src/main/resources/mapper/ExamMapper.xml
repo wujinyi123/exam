@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.exam.mapper.exam.ExamMapper">
+    <!--查询考试码-->
     <select id="getExamByCode" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
         SELECT
         tab.examCode examCode,
@@ -11,7 +12,11 @@
         tab.time time,
         tab.pdDate pdDate,
         tab.expDate expDate,
-        if(tab.remark='0' and tab.exp &lt; SYSDATE(),'2',tab.remark) remark
+        if(tab.remark='0' and tab.exp &lt; SYSDATE(),'2',tab.remark) remark,
+        if(tab.remark='1',
+            (select score from answer
+            where exam_code=tab.examCode and student_number=#{number})
+            ,'') myScore
         FROM
         (SELECT
         t.exam_code examCode,

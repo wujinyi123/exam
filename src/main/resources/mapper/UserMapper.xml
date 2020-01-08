@@ -6,7 +6,7 @@
     <select id="login" parameterType="com.system.exam.domain.qo.user.LoginQO"
             resultType="com.system.exam.domain.dto.user.UserDTO">
         SELECT
-        id,number,password,name,sex,tel,email,img_path,state
+            id,number,password,name,sex,tel,email,img_path,state
         FROM
         <choose>
             <when test="userType=='admin'.toString()">admin</when>
@@ -32,7 +32,7 @@
     <!--获取当前用户（教师）个人资料-->
     <select id="getTeacherInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
-            (SELECT name FROM college WHERE id=t.college_id) college,
+            (SELECT name FROM college WHERE code=t.college_code) college,
             t.number number,
             t.name name,
             t.sex sex,
@@ -46,9 +46,9 @@
     <!--获取当前用户（学生）个人资料-->
     <select id="getStudentInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
-            (SELECT name FROM college WHERE id=stu.college_id) college,
-            (SELECT name FROM clazz WHERE id=stu.clazz_id) major,
-            (SELECT number FROM clazz WHERE id=stu.clazz_id) clazz,
+            (SELECT name FROM college WHERE code=stu.college_code) college,
+            (SELECT name FROM clazz WHERE number=stu.clazz_number) major,
+            (SELECT number FROM clazz WHERE number=stu.clazz_number) clazz,
             stu.number number,
             stu.name name,
             stu.sex sex,
