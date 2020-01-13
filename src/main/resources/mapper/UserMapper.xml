@@ -17,7 +17,7 @@
     </select>
 
     <!--获取当前用户（管理员）个人资料-->
-    <select id="getAdminInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
+    <select id="getAdminInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
             t.number number,
             t.name name,
@@ -30,7 +30,7 @@
     </select>
 
     <!--获取当前用户（教师）个人资料-->
-    <select id="getTeacherInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
+    <select id="getTeacherInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
             (SELECT name FROM college WHERE code=t.college_code) college,
             t.number number,
@@ -44,7 +44,7 @@
     </select>
 
     <!--获取当前用户（学生）个人资料-->
-    <select id="getStudentInfo" parameterType="string" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
+    <select id="getStudentInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
             (SELECT name FROM college WHERE code=stu.college_code) college,
             (SELECT name FROM clazz WHERE number=stu.clazz_number) major,

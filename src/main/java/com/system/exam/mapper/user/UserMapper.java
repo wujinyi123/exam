@@ -4,6 +4,7 @@ import com.system.exam.domain.dto.user.UserInfoDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
+import com.system.exam.domain.qo.user.UserQO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -20,24 +21,24 @@ public interface UserMapper {
 
     /**
      * 获取当前用户（管理员）个人资料
-     * @param number
+     * @param userQO
      * @return
      */
-    UserInfoDTO getAdminInfo(String number);
+    UserInfoDTO getAdminInfo(UserQO userQO);
 
     /**
      * 获取当前用户（教师）个人资料
-     * @param number
+     * @param userQO
      * @return
      */
-    UserInfoDTO getTeacherInfo(String number);
+    UserInfoDTO getTeacherInfo(UserQO userQO);
 
     /**
      * 获取当前用户（学生）个人资料
-     * @param number
+     * @param userQO
      * @return
      */
-    UserInfoDTO getStudentInfo(String number);
+    UserInfoDTO getStudentInfo(UserQO userQO);
 
     /**
      * 修改密码

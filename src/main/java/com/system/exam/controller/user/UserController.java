@@ -8,6 +8,7 @@ import com.system.exam.domain.dto.user.UdateDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
+import com.system.exam.domain.qo.user.UserMsgQO;
 import com.system.exam.domain.qo.user.UserQO;
 import com.system.exam.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,12 @@ public class UserController {
 
     /**
      * 获取用户信息
-     * @param userQO
+     * @param userMsgQO
      * @return
      */
     @PostMapping("/getUserMsg")
-    public ResponseData<UserDTO> getUserMsg(@RequestBody @Valid UserQO userQO) {
-        return ResponseDataUtil.buildSuccess(userService.getUserMsg(userQO));
+    public ResponseData<UserDTO> getUserMsg(@RequestBody @Valid UserMsgQO userMsgQO) {
+        return ResponseDataUtil.buildSuccess(userService.getUserMsg(userMsgQO));
     }
 
     /**

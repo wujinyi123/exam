@@ -8,23 +8,17 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 用户信息QO
+ * 用户基本信息QO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserQO {
+public class UserMsgQO {
     /**
      * 用户类型  admin：管理员，teacher：教师，student：学生
      */
     @NotBlank(message = "用户类型不能为空")
     private String userType;
-
-    /**
-     * 账号/学号
-     */
-    @NotBlank(message = "账号/学号不能为空")
-    private String number;
 
 }

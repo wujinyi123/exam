@@ -7,6 +7,7 @@ import com.system.exam.domain.dto.user.UdateDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
+import com.system.exam.domain.qo.user.UserMsgQO;
 import com.system.exam.domain.qo.user.UserQO;
 import com.system.exam.mapper.user.UserMapper;
 import com.system.exam.service.user.UserService;
@@ -55,15 +56,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 获取用户信息
-     * @param userQO
+     * @param userMsgQO
      * @return
      */
-    public UserDTO getUserMsg(UserQO userQO) {
-        if (StringUtils.isEmpty(userQO.getToken())) {
-            return userSession.getUser(userQO.getUserType()+"ExamSystem");
-        } else {
-            return userSession.getUserByKeyToken(userQO.getUserType()+"ExamSystem", userQO.getToken());
-        }
+    public UserDTO getUserMsg(UserMsgQO userMsgQO) {
+        return userSession.getUser(userMsgQO.getUserType()+"ExamSystem");
     }
 
     /**
@@ -72,17 +69,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserInfoDTO getUserInfo(UserQO userQO) {
-        UserDTO userDTO = userSession.getUser(userQO.getUserType()+"ExamSystem");
-        if (userDTO==null) {
-            return null;
-        } else {
-            //判断不同客户端
-            switch (userQO.getUserType()) {
-                case "admin" : return userMapper.getAdminInfo(userDTO.getNumber());
-                case "teacher" : return userMapper.getTeacherInfo(userDTO.getNumber());
-                case "student" : return userMapper.getStudentInfo(userDTO.getNumber());
-                default : return null;
-            }
+        //判断不同客户端
+        switch (userQO.getUserType()) {
+            case "admin" : return userMapper.getAdminInfo(userQO);
+            case "teacher" : return userMapper.getTeacherInfo(userQO);
+            case "student" : return userMapper.getStudentInfo(userQO);
+            default : return null;
         }
     }
 

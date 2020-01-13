@@ -6,6 +6,7 @@ import com.system.exam.domain.dto.user.UdateDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
+import com.system.exam.domain.qo.user.UserMsgQO;
 import com.system.exam.domain.qo.user.UserQO;
 
 /**
@@ -21,10 +22,10 @@ public interface UserService {
 
     /**
      * 获取用户信息
-     * @param userQO
+     * @param userMsgQO
      * @return
      */
-    UserDTO getUserMsg(UserQO userQO);
+    UserDTO getUserMsg(UserMsgQO userMsgQO);
 
     /**
      * 获取当前用户个人资料

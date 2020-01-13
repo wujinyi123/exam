@@ -22,7 +22,7 @@ public class UdateQO {
     private String userType;
 
     /**
-     * 账号
+     * 账号/学号
      */
     private String number;
 
