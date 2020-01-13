@@ -4,12 +4,15 @@ import com.system.exam.common.IUserSession;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.exam.ExamQO;
+import com.system.exam.domain.qo.exam.NewExamQO;
 import com.system.exam.mapper.exam.ExamMapper;
 import com.system.exam.service.exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 考试业务层实现类
@@ -43,6 +46,23 @@ public class ExamServiceImpl implements ExamService {
             examDTO.setIsFlag("ok");
         }
         return examDTO;
+    }
+
+    /**
+     * 获取未参加且未超过截止时间的考试
+     * @param newExamQO
+     * @return
+     */
+    @Override
+    public List<ExamDTO> getNewExam(NewExamQO newExamQO) {
+        UserDTO userDTO = userSession.getUserByKeyToken("studentExamSystem","11913de30-d050-4b1b-82af-8fff0c80000e");
+        //UserDTO userDTO = userSession.getUser("studentExamSystem");
+        if (userDTO == null) {
+            return new ArrayList<ExamDTO>();
+        } else {
+            newExamQO.setNumber(userDTO.getNumber());
+            return examMapper.getNewExam(newExamQO);
+        }
     }
 
 }

@@ -23,7 +23,7 @@
         t.exam_name examName,
         t.score score,
         (select
-        concat((select name from college WHERE id=te.college_id),',',te.name,'老师')
+        concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
         from teacher te
         where te.number=t.teacher_number) teacherName,
         concat(t.time,'分钟') time,
@@ -33,6 +33,10 @@
         (select count(1) from answer
         where state='1' and exam_code=t.exam_code and student_number=#{number}) remark
         FROM exam t where t.exam_code=#{examCode}) tab
+    </select>
+
+    <select id="getNewExam" parameterType="com.system.exam.domain.qo.exam.NewExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
+
     </select>
 
 </mapper>

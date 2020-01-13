@@ -9,13 +9,11 @@ public class PageQO {
     /**
      * 页码
      */
-    @NotNull(message = "页码不能为空")
-    private Integer page;
+    private Integer page = 1;
 
     /**
      * 每页条数
      */
-    @NotNull(message = "每页条数")
-    private Integer limit;
+    private Integer limit = 10;
 
 }
