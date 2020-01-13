@@ -22,6 +22,6 @@ public interface ExamService {
      * @param newExamQO
      * @return
      */
-    List<ExamDTO> getNewExam(NewExamQO newExamQO);
+    List<ExamDTO> pageNewExam(NewExamQO newExamQO);
 
 }

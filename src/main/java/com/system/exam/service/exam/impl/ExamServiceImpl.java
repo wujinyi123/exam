@@ -49,8 +49,8 @@ public class ExamServiceImpl implements ExamService {
      * @return
      */
     @Override
-    public List<ExamDTO> getNewExam(NewExamQO newExamQO) {
-        return examMapper.getNewExam(newExamQO);
+    public List<ExamDTO> pageNewExam(NewExamQO newExamQO) {
+        return examMapper.pageNewExam(newExamQO);
     }
 
 }

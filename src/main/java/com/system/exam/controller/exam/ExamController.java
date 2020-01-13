@@ -40,9 +40,9 @@ public class ExamController {
      * 获取未参加且未超过截止时间的考试
      * @return
      */
-    @PostMapping("/getNewExam")
-    public ResponseData<List<ExamDTO>> getNewExam(@RequestBody @Valid NewExamQO newExamQO) {
-        return ResponseDataUtil.buildSuccess(examService.getNewExam(newExamQO), newExamQO);
+    @PostMapping("/pageNewExam")
+    public ResponseData<List<ExamDTO>> pageNewExam(@RequestBody @Valid NewExamQO newExamQO) {
+        return ResponseDataUtil.buildSuccess(examService.pageNewExam(newExamQO), newExamQO);
     }
 
 }
