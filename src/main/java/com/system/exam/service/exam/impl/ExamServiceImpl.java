@@ -55,7 +55,7 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public List<ExamDTO> getNewExam(NewExamQO newExamQO) {
-        UserDTO userDTO = userSession.getUserByKeyToken("studentExamSystem","11913de30-d050-4b1b-82af-8fff0c80000e");
+        UserDTO userDTO = userSession.getUserByKeyToken("studentExamSystem","232a6701-b41b-4f15-9453-738dfc025ef2");
         //UserDTO userDTO = userSession.getUser("studentExamSystem");
         if (userDTO == null) {
             return new ArrayList<ExamDTO>();

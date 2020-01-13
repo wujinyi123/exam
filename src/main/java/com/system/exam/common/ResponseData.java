@@ -42,6 +42,15 @@ public class ResponseData<T> implements Serializable {
         this.code = ResultEnums.SUCCESS.getCode();
         this.msg = ResultEnums.SUCCESS.getMsg();
         this.count = ((List) data).size() + "";
+        if (pageQO.getPage() <= 0) pageQO.setPage(1);
+        Integer maxPage = ((List) data).size() / pageQO.getLimit()
+                + ((List) data).size() % pageQO.getLimit()==0?0:1;
+        if (maxPage < pageQO.getPage()) pageQO.setPage(maxPage);
+        if (maxPage == 0) {
+            this.data = data;
+            return;
+        }
+
         if (pageQO.getPage() * pageQO.getLimit() <= ((List) data).size()) {
             this.data = (T) ((List) data).subList((pageQO.getPage() - 1) * pageQO.getLimit(), pageQO.getPage() * pageQO.getLimit());
         } else {

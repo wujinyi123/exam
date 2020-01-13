@@ -36,7 +36,25 @@
     </select>
 
     <select id="getNewExam" parameterType="com.system.exam.domain.qo.exam.NewExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
-
+        SELECT
+		t.exam_code examCode,
+		t.exam_name examName,
+		t.score score,
+		(select
+			concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
+			from teacher te
+			where te.number=t.teacher_number) teacherName,
+		concat(t.time,'分钟') time,
+		date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+		date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
+		t.exp_time exp
+		FROM exam_message em
+			LEFT JOIN exam t on em.exam_code=t.exam_code
+			LEFT JOIN answer ans on t.exam_code=ans.exam_code and ans.student_number=em.student_number
+		WHERE t.state='1' and em.state='1'
+		and (ans.state is null or ans.state!='1')
+		and em.student_number=#{number}
+		ORDER BY t.exp_time,t.exam_code
     </select>
 
 </mapper>
