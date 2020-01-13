@@ -32,11 +32,6 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public ExamDTO getExamByCode(ExamQO examQO) {
-        if ("student".equals(examQO.getUserType())) {
-            examQO.setNumber(((UserDTO)userSession.getUser("studentExamSystem")).getNumber());
-        } else {
-            examQO.setNumber(" ");
-        }
         ExamDTO examDTO = examMapper.getExamByCode(examQO);
         if (examDTO==null) {
             examDTO = new ExamDTO();
@@ -55,14 +50,7 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public List<ExamDTO> getNewExam(NewExamQO newExamQO) {
-        UserDTO userDTO = userSession.getUserByKeyToken("studentExamSystem","232a6701-b41b-4f15-9453-738dfc025ef2");
-        //UserDTO userDTO = userSession.getUser("studentExamSystem");
-        if (userDTO == null) {
-            return new ArrayList<ExamDTO>();
-        } else {
-            newExamQO.setNumber(userDTO.getNumber());
-            return examMapper.getNewExam(newExamQO);
-        }
+        return examMapper.getNewExam(newExamQO);
     }
 
 }

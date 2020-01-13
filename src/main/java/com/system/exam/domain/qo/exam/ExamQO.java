@@ -16,12 +16,6 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class ExamQO {
     /**
-     * 用户类型
-     */
-    @NotBlank(message = "用户类型不能为空")
-    private String userType;
-
-    /**
      * 考试码
      */
     @NotBlank(message = "考试码不能为空")

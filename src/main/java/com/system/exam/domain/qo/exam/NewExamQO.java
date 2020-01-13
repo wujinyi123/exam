@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 新考试QO
  */
@@ -17,6 +19,7 @@ public class NewExamQO extends PageQO {
     /**
      * 学号
      */
+    @NotBlank(message = "学号不能为空")
     private String number;
 
 }

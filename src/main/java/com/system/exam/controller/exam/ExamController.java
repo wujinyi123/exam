@@ -41,7 +41,7 @@ public class ExamController {
      * @return
      */
     @PostMapping("/getNewExam")
-    public ResponseData<List<ExamDTO>> getNewExam(@RequestBody NewExamQO newExamQO) {
+    public ResponseData<List<ExamDTO>> getNewExam(@RequestBody @Valid NewExamQO newExamQO) {
         return ResponseDataUtil.buildSuccess(examService.getNewExam(newExamQO), newExamQO);
     }
 
