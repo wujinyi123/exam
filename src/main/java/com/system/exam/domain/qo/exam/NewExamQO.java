@@ -19,7 +19,6 @@ public class NewExamQO extends PageQO {
     /**
      * 学号
      */
-    @NotBlank(message = "学号不能为空")
     private String number;
 
 }

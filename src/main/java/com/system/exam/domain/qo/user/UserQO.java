@@ -24,7 +24,6 @@ public class UserQO {
     /**
      * 账号/学号
      */
-    @NotBlank(message = "账号/学号不能为空")
     private String number;
 
 }

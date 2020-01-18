@@ -11,14 +11,14 @@ import java.util.List;
  */
 public interface ExamService {
     /**
-     * 查询考试码
+     * 查询考试码（学生）
      * @param examQO
      * @return
      */
     ExamDTO getExamByCode(ExamQO examQO);
 
     /**
-     * 获取未参加且未超过截止时间的考试
+     * 获取未参加且未超过截止时间的考试（学生）
      * @param newExamQO
      * @return
      */

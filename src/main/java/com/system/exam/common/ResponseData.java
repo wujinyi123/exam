@@ -44,7 +44,7 @@ public class ResponseData<T> implements Serializable {
         this.count = ((List) data).size() + "";
         if (pageQO.getPage() <= 0) pageQO.setPage(1);
         Integer maxPage = ((List) data).size() / pageQO.getLimit()
-                + ((List) data).size() % pageQO.getLimit()==0?0:1;
+                + (((List) data).size() % pageQO.getLimit()==0?0:1);
         if (maxPage < pageQO.getPage()) pageQO.setPage(maxPage);
         if (maxPage == 0) {
             this.data = data;

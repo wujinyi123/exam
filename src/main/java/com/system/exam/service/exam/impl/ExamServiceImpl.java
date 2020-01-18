@@ -26,12 +26,15 @@ public class ExamServiceImpl implements ExamService {
     private IUserSession userSession;
 
     /**
-     * 查询考试码
+     * 查询考试码（学生）
      * @param examQO
      * @return
      */
     @Override
     public ExamDTO getExamByCode(ExamQO examQO) {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("studentExamSystem");
+        examQO.setNumber(userDTO.getNumber());
         ExamDTO examDTO = examMapper.getExamByCode(examQO);
         if (examDTO==null) {
             examDTO = new ExamDTO();
@@ -44,12 +47,15 @@ public class ExamServiceImpl implements ExamService {
     }
 
     /**
-     * 获取未参加且未超过截止时间的考试
+     * 获取未参加且未超过截止时间的考试（学生）
      * @param newExamQO
      * @return
      */
     @Override
     public List<ExamDTO> pageNewExam(NewExamQO newExamQO) {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("studentExamSystem");
+        newExamQO.setNumber(userDTO.getNumber());
         return examMapper.pageNewExam(newExamQO);
     }
 

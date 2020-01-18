@@ -94,10 +94,11 @@ public class UserSessionImpl implements IUserSession {
     @Override
     public <T> T getUser(String key) {
         String token = getUserToken(key);
+        T t = null;
         if (!StringUtils.isEmpty(token)) {
-            return (T)redisTemplate.opsForValue().get(key + ":" + token);
+            t = (T)redisTemplate.opsForValue().get(key + ":" + token);
         }
-        return null;
+        return t;
     }
 
     /**

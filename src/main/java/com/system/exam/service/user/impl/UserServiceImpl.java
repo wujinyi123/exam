@@ -69,6 +69,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserInfoDTO getUserInfo(UserQO userQO) {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser(userQO.getUserType()+"ExamSystem");
+        userQO.setNumber(userDTO.getNumber());
         //判断不同客户端
         switch (userQO.getUserType()) {
             case "admin" : return userMapper.getAdminInfo(userQO);

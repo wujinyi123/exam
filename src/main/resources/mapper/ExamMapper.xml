@@ -35,7 +35,8 @@
         FROM exam t where t.exam_code=#{examCode}) tab
     </select>
 
-    <select id="getNewExam" parameterType="com.system.exam.domain.qo.exam.NewExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
+    <!--获取未参加且未超过截止时间的考试（学生）-->
+    <select id="pageNewExam" parameterType="com.system.exam.domain.qo.exam.NewExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
         SELECT
 		t.exam_code examCode,
 		t.exam_name examName,
@@ -53,6 +54,7 @@
 			LEFT JOIN answer ans on t.exam_code=ans.exam_code and ans.student_number=em.student_number
 		WHERE t.state='1' and em.state='1'
 		and (ans.state is null or ans.state!='1')
+		and t.exp_time>SYSDATE()
 		and em.student_number=#{number}
 		ORDER BY t.exp_time,t.exam_code
     </select>
