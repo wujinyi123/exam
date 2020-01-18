@@ -26,4 +26,9 @@ public class ExamQO {
      */
     private String number;
 
+    /**
+     * 题目类型
+     */
+    private String type;
+
 }

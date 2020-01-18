@@ -2,6 +2,7 @@ package com.system.exam.controller.exam;
 
 import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
+import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
@@ -40,6 +41,25 @@ public class ExamController {
     @GetMapping("/pageNewExam")
     public ResponseData<List<ExamDTO>> pageNewExam(NewExamQO newExamQO) {
         return ResponseDataUtil.buildSuccess(examService.pageNewExam(newExamQO), newExamQO);
+    }
+
+    /**
+     * 近期（5条）考试成绩 （学生）
+     * @return
+     */
+    @PostMapping("/listNewScore")
+    public ResponseData<List<ExamDTO>> listNewScore() {
+        return ResponseDataUtil.buildSuccess(examService.listNewScore());
+    }
+
+    /**
+     * 进入考试
+     * @param examQO
+     * @return
+     */
+    @PostMapping("/enterExam")
+    public ResponseData<EnterExamDTO> enterExam(@RequestBody @Valid ExamQO examQO) {
+        return ResponseDataUtil.buildSuccess(examService.enterExam(examQO));
     }
 
 }

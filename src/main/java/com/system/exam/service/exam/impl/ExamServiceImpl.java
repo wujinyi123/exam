@@ -1,6 +1,7 @@
 package com.system.exam.service.exam.impl;
 
 import com.system.exam.common.IUserSession;
+import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.exam.ExamQO;
@@ -57,6 +58,35 @@ public class ExamServiceImpl implements ExamService {
         UserDTO userDTO = userSession.getUser("studentExamSystem");
         newExamQO.setNumber(userDTO.getNumber());
         return examMapper.pageNewExam(newExamQO);
+    }
+
+    /**
+     * 近期（5条）考试成绩 （学生）
+     * @return
+     */
+    @Override
+    public List<ExamDTO> listNewScore() {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("studentExamSystem");
+        List<ExamDTO> list =  examMapper.listNewScore(userDTO.getNumber());
+        return list;
+    }
+
+    /**
+     * 进入考试
+     * @param examQO
+     * @return
+     */
+    @Override
+    public EnterExamDTO enterExam(ExamQO examQO) {
+        EnterExamDTO enterExamDTO = examMapper.enterExam(examQO);
+        if (enterExamDTO != null) {
+            examQO.setType("1");
+            enterExamDTO.setSingleList(examMapper.listQuestion(examQO));
+            examQO.setType("2");
+            enterExamDTO.setMultipleList(examMapper.listQuestion(examQO));
+        }
+        return enterExamDTO;
     }
 
 }

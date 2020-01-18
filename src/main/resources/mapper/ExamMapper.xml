@@ -59,4 +59,60 @@
 		ORDER BY t.exp_time,t.exam_code
     </select>
 
+    <!--近期（5条）考试成绩 （学生）-->
+    <select id="listNewScore" parameterType="string" resultType="com.system.exam.domain.dto.exam.ExamDTO">
+        select
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            (select
+                concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
+                from teacher te
+                where te.number=t.teacher_number) teacherName,
+            ans.use_time time,
+            ans.score myScore
+        from answer ans
+        left join exam t on ans.exam_code=t.exam_code
+        where ans.state='1' and t.state='1' and ans.student_number=#{number}
+        ORDER BY ans.submit_time desc
+        LIMIT 5
+    </select>
+
+    <!--进入考试-->
+    <select id="enterExam" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.EnterExamDTO">
+        select
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            t.time time,
+            (select sum(score) from question
+                where state='1' and exam_code=t.exam_code and type='1') singleScore,
+            (select sum(score) from question
+                where state='1' and exam_code=t.exam_code and type='2') multipleScore
+        from exam t
+        where t.state='1' and t.exam_code=#{examCode}
+    </select>
+
+    <!--根据题目类型，得到题目集合-->
+    <select id="listQuestion" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.QuestionDTO">
+        select
+            question question,
+            answer answer,
+            score score,
+            option_a optionA,
+            option_b optionB,
+            option_c optionC,
+            option_d optionD,
+            answer_analysis analysis,
+            img_question imgQuestion,
+            img_a imgA,
+            img_b imgB,
+            img_c imgC,
+            img_d imgD,
+            img_analysis imgAnalysis
+        from question
+        where state='1' and type=#{type} and exam_code=#{examCode}
+        ORDER BY id
+    </select>
+
 </mapper>

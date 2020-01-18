@@ -1,5 +1,7 @@
 package com.system.exam.service.exam;
 
+import com.system.exam.common.ResultEnums;
+import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
@@ -23,5 +25,18 @@ public interface ExamService {
      * @return
      */
     List<ExamDTO> pageNewExam(NewExamQO newExamQO);
+
+    /**
+     * 近期（5条）考试成绩 （学生）
+     * @return
+     */
+    List<ExamDTO> listNewScore();
+
+    /**
+     * 进入考试
+     * @param examQO
+     * @return
+     */
+    EnterExamDTO enterExam(ExamQO examQO);
 
 }
