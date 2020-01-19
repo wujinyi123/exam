@@ -102,8 +102,15 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public ExamResultDTO submitAnswer(AnswerQO answerQO) {
-        checkAnswer.getStuAnswer(answerQO);
-        return null;
+        //获取正确答案
+        ExamResultDTO examResultDTO = new ExamResultDTO();
+        ExamQO examQO = new ExamQO(answerQO.getExamCode());
+        examQO.setType("1");
+        examResultDTO.setSingleAnswerList(examMapper.listAnswer(examQO));
+        examQO.setType("2");
+        examResultDTO.setMultipleAnswerList(examMapper.listAnswer(examQO));
+        checkAnswer.examResult(examResultDTO,answerQO);
+        return examResultDTO;
     }
 
 }

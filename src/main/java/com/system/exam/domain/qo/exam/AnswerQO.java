@@ -46,7 +46,7 @@ public class AnswerQO {
      * 用时
      */
     @NotBlank(message = "用时不能为空")
-    private String userTime;
+    private String useTime;
 
     /**
      * 提交时间

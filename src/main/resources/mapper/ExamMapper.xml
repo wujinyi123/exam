@@ -115,4 +115,16 @@
         ORDER BY id
     </select>
 
+    <!--题目的正确答案-->
+    <select id="listAnswer" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.AnswerDTO">
+        select
+            answer answer,
+            score score,
+            answer_analysis answerAnalysis,
+            img_analysis imgAnalysis
+        from question
+        where state='1' and exam_code=#{examCode} and type=#{type}
+        order by id
+    </select>
+
 </mapper>

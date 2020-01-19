@@ -26,11 +26,16 @@ public class AnswerDTO {
     /**
      * 分值
      */
-    private String score;
+    private Integer score;
 
     /**
      * 答案解析
      */
     private String answerAnalysis;
+
+    /**
+     * 答案解析图片地址
+     */
+    private String imgAnalysis;
 
 }

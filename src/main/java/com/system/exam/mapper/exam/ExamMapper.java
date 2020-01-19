@@ -1,5 +1,6 @@
 package com.system.exam.mapper.exam;
 
+import com.system.exam.domain.dto.exam.AnswerDTO;
 import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.dto.exam.QuestionDTO;
@@ -48,5 +49,12 @@ public interface ExamMapper {
      * @return
      */
     List<QuestionDTO> listQuestion(ExamQO examQO);
+
+    /**
+     * 题目的正确答案
+     * @param examQO
+     * @return
+     */
+    List<AnswerDTO> listAnswer(ExamQO examQO);
 
 }
