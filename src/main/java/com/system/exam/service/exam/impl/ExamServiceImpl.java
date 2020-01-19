@@ -1,9 +1,12 @@
 package com.system.exam.service.exam.impl;
 
+import com.system.exam.common.ICheckAnswer;
 import com.system.exam.common.IUserSession;
 import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
+import com.system.exam.domain.dto.exam.ExamResultDTO;
 import com.system.exam.domain.dto.user.UserDTO;
+import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
 import com.system.exam.mapper.exam.ExamMapper;
@@ -25,6 +28,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Autowired
     private IUserSession userSession;
+
+    @Autowired
+    private ICheckAnswer checkAnswer;
 
     /**
      * 查询考试码（学生）
@@ -87,6 +93,17 @@ public class ExamServiceImpl implements ExamService {
             enterExamDTO.setMultipleList(examMapper.listQuestion(examQO));
         }
         return enterExamDTO;
+    }
+
+    /**
+     * 提交答案
+     * @param answerQO
+     * @return
+     */
+    @Override
+    public ExamResultDTO submitAnswer(AnswerQO answerQO) {
+        checkAnswer.getStuAnswer(answerQO);
+        return null;
     }
 
 }

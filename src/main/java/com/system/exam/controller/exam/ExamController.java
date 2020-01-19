@@ -4,6 +4,8 @@ import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
 import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
+import com.system.exam.domain.dto.exam.ExamResultDTO;
+import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
 import com.system.exam.service.exam.ExamService;
@@ -65,12 +67,12 @@ public class ExamController {
 
     /**
      * 提交答案
-     * @param map
+     * @param answerQO
      * @return
      */
     @PostMapping("/submitAnswer")
-    public ResponseData<String> submitAnswer(@RequestBody Map<String,String> map) {
-        return ResponseDataUtil.buildSuccess("");
+    public ResponseData<ExamResultDTO> submitAnswer(@Valid AnswerQO answerQO) {
+        return ResponseDataUtil.buildSuccess(examService.submitAnswer(answerQO));
     }
 
 }
