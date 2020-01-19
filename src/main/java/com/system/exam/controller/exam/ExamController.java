@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 考试
@@ -60,6 +61,16 @@ public class ExamController {
     @PostMapping("/enterExam")
     public ResponseData<EnterExamDTO> enterExam(@RequestBody @Valid ExamQO examQO) {
         return ResponseDataUtil.buildSuccess(examService.enterExam(examQO));
+    }
+
+    /**
+     * 提交答案
+     * @param map
+     * @return
+     */
+    @PostMapping("/submitAnswer")
+    public ResponseData<String> submitAnswer(@RequestBody Map<String,String> map) {
+        return ResponseDataUtil.buildSuccess("");
     }
 
 }
