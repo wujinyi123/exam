@@ -1,9 +1,7 @@
 package com.system.exam.mapper.exam;
 
-import com.system.exam.domain.dto.exam.AnswerDTO;
-import com.system.exam.domain.dto.exam.EnterExamDTO;
-import com.system.exam.domain.dto.exam.ExamDTO;
-import com.system.exam.domain.dto.exam.QuestionDTO;
+import com.system.exam.domain.dto.exam.*;
+import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
 import org.apache.ibatis.annotations.Mapper;
@@ -56,5 +54,33 @@ public interface ExamMapper {
      * @return
      */
     List<AnswerDTO> listAnswer(ExamQO examQO);
+
+    /**
+     * 上传考试结果
+     * @param answerQO
+     * @return
+     */
+    int submitAnswer(AnswerQO answerQO);
+
+    /**
+     * 是否已参加考试
+     * @param examQO
+     * @return
+     */
+    int checkExam(ExamQO examQO);
+
+    /**
+     * 得到考生答案
+     * @param examQO
+     * @return
+     */
+    StuAnsDTO getStuAns(ExamQO examQO);
+
+    /**
+     * 更新考生成绩
+     * @param examQO
+     * @return
+     */
+    int updateScore(ExamQO examQO);
 
 }

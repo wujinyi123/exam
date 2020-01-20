@@ -75,4 +75,24 @@ public class ExamController {
         return ResponseDataUtil.buildSuccess(examService.submitAnswer(answerQO));
     }
 
+    /**
+     * 是否已参加考试
+     * @param examQO
+     * @return
+     */
+    @PostMapping("/checkExam")
+    public ResponseData<String> checkExam(@RequestBody @Valid ExamQO examQO) {
+        return ResponseDataUtil.buildSuccess(examService.checkExam(examQO));
+    }
+
+    /**
+     * 得到考试结果
+     * @param examQO
+     * @return
+     */
+    @PostMapping("/getExamResult")
+    public ResponseData<ExamResultDTO> getExamResult(@RequestBody @Valid ExamQO examQO) {
+        return ResponseDataUtil.buildSuccess(examService.getExamResult(examQO));
+    }
+
 }

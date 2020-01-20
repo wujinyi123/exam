@@ -5,6 +5,7 @@ import com.system.exam.common.IUserSession;
 import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.dto.exam.ExamResultDTO;
+import com.system.exam.domain.dto.exam.StuAnsDTO;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
@@ -109,7 +110,54 @@ public class ExamServiceImpl implements ExamService {
         examResultDTO.setSingleAnswerList(examMapper.listAnswer(examQO));
         examQO.setType("2");
         examResultDTO.setMultipleAnswerList(examMapper.listAnswer(examQO));
+        //核对答案
         checkAnswer.examResult(examResultDTO,answerQO);
+        //上传考试结果
+        examMapper.submitAnswer(answerQO);
+        return examResultDTO;
+    }
+
+    /**
+     * 是否已参加考试
+     * @param examQO
+     * @return
+     */
+    @Override
+    public String checkExam(ExamQO examQO) {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("studentExamSystem");
+        examQO.setNumber(userDTO.getNumber());
+        if (examMapper.checkExam(examQO) > 0) return "finish";
+        else return "enterExam";
+    }
+
+    /**
+     * 得到考试结果
+     * @param examQO
+     * @return
+     */
+    @Override
+    public ExamResultDTO getExamResult(ExamQO examQO) {
+        //获取正确答案
+        ExamResultDTO examResultDTO = new ExamResultDTO();
+        examQO.setType("1");
+        examResultDTO.setSingleAnswerList(examMapper.listAnswer(examQO));
+        examQO.setType("2");
+        examResultDTO.setMultipleAnswerList(examMapper.listAnswer(examQO));
+
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("studentExamSystem");
+        examQO.setNumber(userDTO.getNumber());
+
+        //考生答案
+        StuAnsDTO stuAnsDTO = examMapper.getStuAns(examQO);
+        if (stuAnsDTO != null) {
+            checkAnswer.examResult(examResultDTO,stuAnsDTO);
+            if (!examResultDTO.getScore().equals(stuAnsDTO.getScore())) {
+                examQO.setStuScore(examResultDTO.getScore());
+                examMapper.updateScore(examQO);
+            }
+        }
         return examResultDTO;
     }
 

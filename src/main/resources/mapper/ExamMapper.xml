@@ -127,4 +127,31 @@
         order by id
     </select>
 
+    <!--上传考试结果-->
+    <insert id="submitAnswer" parameterType="com.system.exam.domain.qo.exam.AnswerQO">
+        insert into answer(exam_code,student_number,single_answer,multiple_answer,score,use_time,submit_time,state)
+        values (#{examCode},#{stuNumber},#{singleAnswer},#{multipleAnswer},#{score},#{useTime},#{submitTime},'1')
+    </insert>
+
+    <!--是否已参加考试-->
+    <select id="checkExam" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="int">
+        select count(1) from answer
+        where state='1' and exam_code=#{examCode} and student_number=#{number}
+    </select>
+
+    <!--得到考生答案-->
+    <select id="getStuAns" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.StuAnsDTO">
+        select
+            score score,
+            single_answer singleAnswer,
+            multiple_answer multipleAnswer
+        from answer
+        where state='1' and exam_code=#{examCode} and student_number=#{number}
+    </select>
+
+    <!--更新考生成绩-->
+    <update id="updateScore" parameterType="com.system.exam.domain.qo.exam.ExamQO">
+        update answer set score=#{stuScore}
+        where state='1' and exam_code=#{examCode} and student_number=#{number}
+    </update>
 </mapper>

@@ -48,4 +48,18 @@ public interface ExamService {
      */
     ExamResultDTO submitAnswer(AnswerQO answerQO);
 
+    /**
+     * 是否已参加考试
+     * @param examQO
+     * @return
+     */
+    String checkExam(ExamQO examQO);
+
+    /**
+     * 得到考试结果
+     * @param examQO
+     * @return
+     */
+    ExamResultDTO getExamResult(ExamQO examQO);
+
 }

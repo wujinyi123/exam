@@ -31,6 +31,11 @@ public class ExamQO {
      */
     private String type;
 
+    /**
+     * 学生成绩
+     */
+    private String stuScore;
+
     public ExamQO(@NotBlank(message = "考试码不能为空") String examCode) {
         this.examCode = examCode;
     }
