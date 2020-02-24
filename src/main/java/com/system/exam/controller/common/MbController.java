@@ -35,4 +35,13 @@ public class MbController {
         return ResponseDataUtil.buildSuccess(mbService.listExam(mbQO));
     }
 
+    /**
+     * 所有学院
+     * @return
+     */
+    @PostMapping("/listCollege")
+    public ResponseData<List<MbDTO>> listCollege() {
+        return ResponseDataUtil.buildSuccess(mbService.listCollege());
+    }
+
 }

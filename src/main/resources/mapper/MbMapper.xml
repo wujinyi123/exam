@@ -10,4 +10,12 @@
         WHERE state='1' AND teacher_number=#{number}
     </select>
 
+    <select id="listCollege" resultType="com.system.exam.domain.dto.common.MbDTO">
+        SELECT
+            code code,
+            name name
+        FROM college
+        WHERE state='1'
+    </select>
+
 </mapper>

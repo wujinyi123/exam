@@ -31,4 +31,13 @@ public class MbServiceImpl implements MbService {
         return mbMapper.listExam(mbQO);
     }
 
+    /**
+     * 所有学院
+     * @return
+     */
+    @Override
+    public List<MbDTO> listCollege() {
+        return mbMapper.listCollege();
+    }
+
 }

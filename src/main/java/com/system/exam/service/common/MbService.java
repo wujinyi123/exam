@@ -16,4 +16,10 @@ public interface MbService {
      */
     List<MbDTO> listExam(MbQO mbQO);
 
+    /**
+     * 所有学院
+     * @return
+     */
+    List<MbDTO> listCollege();
+
 }

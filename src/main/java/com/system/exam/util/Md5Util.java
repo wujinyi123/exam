@@ -2,6 +2,9 @@ package com.system.exam.util;
 
 import java.security.MessageDigest;
 
+/**
+ * Md5码工具类
+ */
 public class Md5Util {
 
 	public final static String md5(String s) {
