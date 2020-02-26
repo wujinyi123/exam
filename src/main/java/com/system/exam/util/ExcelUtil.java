@@ -2,8 +2,9 @@ package com.system.exam.util;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,49 @@ public class ExcelUtil {
     static {
         cells.put("teacher",6);
         cells.put("student",7);
+        cells.put("clazz",4);
+    }
+
+    public static XSSFWorkbook exportExcel(String workbookName, List<String> listTitle, List<List<String>> datas) throws Exception {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(workbookName);
+        XSSFRow row = null;
+        XSSFCell cell = null;
+
+        //表头
+        row = sheet.createRow(0);
+        //设置行高
+        row.setHeightInPoints(18);
+        //设置为居中加粗
+        XSSFCellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        for (int i=0; i<listTitle.size(); i++) {
+            cell = row.createCell(i);
+            cell.setCellValue(listTitle.get(i));
+            cell.setCellStyle(style);
+        }
+
+        List<String> cellData = null;
+        //表内容
+        for (int i=0; i<datas.size(); i++) {
+            row = sheet.createRow(i+1);
+            //设置行高
+            row.setHeightInPoints(15);
+            cellData = datas.get(i);
+            for (int j=0; j<cellData.size(); j++) {
+                cell = row.createCell(j);
+                cell.setCellValue(cellData.get(j));
+            }
+        }
+        FileOutputStream fos = new FileOutputStream(workbookName+".xlsx");
+        workbook.write(fos);
+        fos.flush();
+        fos.close();
+        return workbook;
     }
 
     /**

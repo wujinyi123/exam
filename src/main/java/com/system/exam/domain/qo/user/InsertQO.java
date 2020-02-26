@@ -5,21 +5,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * 查询账户是否存在QO
+ * 导入用户信息QO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IsUserQO {
+public class InsertQO {
     /**
-     * 用户类型
+     * 类型：教师/学生/班级
      */
     private String type;
 
     /**
-     * 账户
+     * 数据组
      */
-    private String number;
+    private List<String> dataList;
 }

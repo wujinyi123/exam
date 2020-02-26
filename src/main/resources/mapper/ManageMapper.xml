@@ -3,31 +3,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.exam.mapper.user.ManageMapper">
     <!--导入用户-->
-    <insert id="insertUser" parameterType="com.system.exam.domain.qo.user.InsertUserQO">
+    <insert id="insertUser" parameterType="com.system.exam.domain.qo.user.InsertQO">
 
     </insert>
-    <!--所有学院代码-->
-    <select id="listCollegeCode" resultType="java.lang.String">
+    <!--所有学院-->
+    <select id="listCollege" resultType="com.system.exam.domain.dto.common.MbDTO">
         SELECT
-            code
+            code code,
+            name name
         FROM college
         WHERE state='1'
     </select>
-    <!--所有班级代码-->
-    <select id="listClazzNumber" resultType="java.lang.String">
+    <!--所有班级-->
+    <select id="listClazz" resultType="com.system.exam.domain.dto.common.MbDTO">
         SELECT
-            number
+            number code,
+            name name
         FROM clazz
         WHERE state='1'
     </select>
     <!--查询账户是否存在-->
-    <select id="isNumber" parameterType="com.system.exam.domain.qo.user.IsUserQO" resultType="int">
+    <select id="isNumber" parameterType="com.system.exam.domain.qo.user.IsNumberQO" resultType="int">
         SELECT
             count(1)
         FROM
         <choose>
             <when test="type=='teacher'.toString()">teacher</when>
-            <otherwise>student</otherwise>
+            <when test="type=='student'.toString()">student</when>
+            <otherwise>clazz</otherwise>
         </choose>
         WHERE state='1' and number=#{number}
     </select>

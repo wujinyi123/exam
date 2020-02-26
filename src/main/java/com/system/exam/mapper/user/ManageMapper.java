@@ -1,7 +1,8 @@
 package com.system.exam.mapper.user;
 
-import com.system.exam.domain.qo.user.InsertUserQO;
-import com.system.exam.domain.qo.user.IsUserQO;
+import com.system.exam.domain.dto.common.MbDTO;
+import com.system.exam.domain.qo.user.InsertQO;
+import com.system.exam.domain.qo.user.IsNumberQO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,27 +14,27 @@ import java.util.List;
 public interface ManageMapper {
     /**
      * 导入用户信息
-     * @param insertUserQO
+     * @param insertQO
      * @return
      */
-    int insertUser(InsertUserQO insertUserQO);
+    int insertUser(InsertQO insertQO);
 
     /**
-     * 所有学院代码
+     * 所有学院
      * @return
      */
-    List<String> listCollegeCode();
+    List<MbDTO> listCollege();
 
     /**
-     * 所有班级代码
+     * 所有班级
      * @return
      */
-    List<String> listClazzNumber();
+    List<MbDTO> listClazz();
 
     /**
      * 查询账户是否存在
-     * @param isUserQO
+     * @param isNumberQO
      * @return
      */
-    int isNumber(IsUserQO isUserQO);
+    int isNumber(IsNumberQO isNumberQO);
 }

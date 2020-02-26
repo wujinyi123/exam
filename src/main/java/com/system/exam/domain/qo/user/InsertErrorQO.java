@@ -1,4 +1,4 @@
-package com.system.exam.domain.dto.user;
+package com.system.exam.domain.qo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,13 +8,18 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 导入用户情况DTO
+ * 错误用户QO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InsertUserDTO {
+public class InsertErrorQO {
+    /**
+     * 用户类型
+     */
+    private String type;
+
     /**
      * 文件信息
      */
