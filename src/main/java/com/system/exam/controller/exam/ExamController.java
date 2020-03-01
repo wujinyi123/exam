@@ -5,8 +5,10 @@ import com.system.exam.common.ResponseDataUtil;
 import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.dto.exam.ExamResultDTO;
+import com.system.exam.domain.dto.exam.NewBuiltExamDTO;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
+import com.system.exam.domain.qo.exam.NewBuiltExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
 import com.system.exam.service.exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +95,16 @@ public class ExamController {
     @PostMapping("/getExamResult")
     public ResponseData<ExamResultDTO> getExamResult(@RequestBody @Valid ExamQO examQO) {
         return ResponseDataUtil.buildSuccess(examService.getExamResult(examQO));
+    }
+
+    /**
+     * 新建考试
+     * @param newBuiltExamQO
+     * @return
+     */
+    @PostMapping("/newBuiltExam")
+    public ResponseData<NewBuiltExamDTO> newBuiltExam(@RequestBody @Valid NewBuiltExamQO newBuiltExamQO) {
+        return ResponseDataUtil.buildSuccess(examService.newBuiltExam(newBuiltExamQO));
     }
 
 }

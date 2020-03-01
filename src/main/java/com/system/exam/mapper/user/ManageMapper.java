@@ -13,11 +13,11 @@ import java.util.List;
 @Mapper
 public interface ManageMapper {
     /**
-     * 导入用户信息
+     * 导入信息
      * @param insertQO
      * @return
      */
-    int insertUser(InsertQO insertQO);
+    int insert(InsertQO insertQO);
 
     /**
      * 所有学院

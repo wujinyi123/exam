@@ -12,12 +12,19 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface ManageService {
     /**
+     * 下载模板
+     * @param response
+     * @param type
+     */
+    void downloadTemplate(HttpServletResponse response, String type);
+
+    /**
      * 导入信息
      * @param file
      * @param insertQO
      * @return
      */
-    InsertDTO insertUser(MultipartFile file, InsertQO insertQO);
+    InsertDTO insert(MultipartFile file, InsertQO insertQO);
 
     /**
      * 导出学院代码、班级号

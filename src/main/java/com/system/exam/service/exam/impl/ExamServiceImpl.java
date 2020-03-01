@@ -2,13 +2,11 @@ package com.system.exam.service.exam.impl;
 
 import com.system.exam.common.ICheckAnswer;
 import com.system.exam.common.IUserSession;
-import com.system.exam.domain.dto.exam.EnterExamDTO;
-import com.system.exam.domain.dto.exam.ExamDTO;
-import com.system.exam.domain.dto.exam.ExamResultDTO;
-import com.system.exam.domain.dto.exam.StuAnsDTO;
+import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
+import com.system.exam.domain.qo.exam.NewBuiltExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
 import com.system.exam.mapper.exam.ExamMapper;
 import com.system.exam.service.exam.ExamService;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 考试业务层实现类
@@ -159,6 +158,18 @@ public class ExamServiceImpl implements ExamService {
             }
         }
         return examResultDTO;
+    }
+
+    /**
+     * 新建考试
+     * @param newBuiltExamQO
+     * @return
+     */
+    @Override
+    public NewBuiltExamDTO newBuiltExam(NewBuiltExamQO newBuiltExamQO) {
+        NewBuiltExamDTO newBuiltExamDTO = new NewBuiltExamDTO();
+        newBuiltExamDTO.setExamCode(UUID.randomUUID().toString());
+        return newBuiltExamDTO;
     }
 
 }

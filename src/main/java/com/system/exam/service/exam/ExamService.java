@@ -4,8 +4,10 @@ import com.system.exam.common.ResultEnums;
 import com.system.exam.domain.dto.exam.EnterExamDTO;
 import com.system.exam.domain.dto.exam.ExamDTO;
 import com.system.exam.domain.dto.exam.ExamResultDTO;
+import com.system.exam.domain.dto.exam.NewBuiltExamDTO;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
+import com.system.exam.domain.qo.exam.NewBuiltExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
 
 import java.util.List;
@@ -61,5 +63,12 @@ public interface ExamService {
      * @return
      */
     ExamResultDTO getExamResult(ExamQO examQO);
+
+    /**
+     * 新建考试
+     * @param newBuiltExamQO
+     * @return
+     */
+    NewBuiltExamDTO newBuiltExam(NewBuiltExamQO newBuiltExamQO);
 
 }

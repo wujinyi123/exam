@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 /**
  * 管理
@@ -22,6 +23,16 @@ import javax.servlet.http.HttpServletResponse;
 public class ManageController {
     @Autowired
     private ManageService manageService;
+
+    /**
+     * 下载模板
+     * @param response
+     * @param type
+     */
+    @GetMapping("/downloadTemplate")
+    public void downloadTemplate(HttpServletResponse response, @RequestParam @NotNull String type) {
+        manageService.downloadTemplate(response,type);
+    }
 
     /**
      * 导出学院代码、班级号
@@ -37,7 +48,7 @@ public class ManageController {
      * @param insertErrorQO
      * @param response
      */
-    @GetMapping("/insertError")
+    @PostMapping("/insertError")
     public void insertError(@RequestBody InsertErrorQO insertErrorQO, HttpServletResponse response) {
         manageService.insertError(insertErrorQO,response);
     }
@@ -48,8 +59,8 @@ public class ManageController {
      * @param insertQO
      * @return
      */
-    @PostMapping("/insertUser")
-    public ResponseData<InsertDTO> insertUser(@RequestParam("file") MultipartFile file, InsertQO insertQO) {
-        return ResponseDataUtil.buildSuccess(manageService.insertUser(file,insertQO));
+    @PostMapping("/insert")
+    public ResponseData<InsertDTO> insert(@RequestParam("file") MultipartFile file, InsertQO insertQO) {
+        return ResponseDataUtil.buildSuccess(manageService.insert(file,insertQO));
     }
 }

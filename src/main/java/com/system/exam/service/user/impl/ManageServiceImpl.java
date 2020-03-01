@@ -29,6 +29,46 @@ public class ManageServiceImpl implements ManageService {
     private ManageMapper manageMapper;
 
     /**
+     * 下载模板
+     * @param response
+     * @param type
+     */
+    @Override
+    public void downloadTemplate(HttpServletResponse response, String type) {
+        List<String> listTitle = new ArrayList<>();
+        switch (type){
+            case "clazz":{
+                listTitle.add("学院代码");
+                listTitle.add("年级（四位整数）");
+                listTitle.add("班级号（学院代码+年级+XX）");
+                listTitle.add("专业");
+                break;
+            }
+            case "student":{
+                listTitle.add("学号");
+                listTitle.add("姓名");
+                listTitle.add("性别");
+                listTitle.add("电话");
+                listTitle.add("邮箱");
+                listTitle.add("学院代码");
+                listTitle.add("班级号");
+                break;
+            }
+            case "teacher":{
+                listTitle.add("教师号");
+                listTitle.add("姓名");
+                listTitle.add("性别");
+                listTitle.add("电话");
+                listTitle.add("邮箱");
+                listTitle.add("学院代码");
+                break;
+            }
+            default:break;
+        }
+        exportExcel(response,type,listTitle,new ArrayList<>());
+    }
+
+    /**
      * 导出学院代码、班级号
      * @param response
      */
@@ -60,18 +100,7 @@ public class ManageServiceImpl implements ManageService {
             dataList.add(listClazz.get(i).getCode());
             datas.add(dataList);
         }
-
-        try {
-            response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode("学院代码、班级号.xlsx", "utf-8"));
-            OutputStream outputStream = response.getOutputStream();
-            XSSFWorkbook workbook = ExcelUtil.exportExcel("学院代码、班级号",listTitle,datas);
-            workbook.write(outputStream);
-            outputStream.flush();
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        exportExcel(response,"学院代码、班级号",listTitle,datas);
     }
 
     /**
@@ -82,27 +111,45 @@ public class ManageServiceImpl implements ManageService {
     public void insertError(InsertErrorQO insertErrorQO, HttpServletResponse response) {
         String fileName = "";
         List<String> listTitle = new ArrayList<>();
-        if ("teacher".equals(insertErrorQO.getType())) {
-            listTitle.add("教师号");
-            fileName = "错误教师信息";
+        if ("clazz".equals(insertErrorQO.getType())) {
+            fileName = "错误班级信息";
+            listTitle.add("学院代码");
+            listTitle.add("年级（四位整数）");
+            listTitle.add("班级号（学院代码+年级+XX）");
+            listTitle.add("专业");
         } else {
-            listTitle.add("学号");
-            fileName = "错误学生信息";
+            if ("teacher".equals(insertErrorQO.getType())) {
+                listTitle.add("教师号");
+                fileName = "错误教师信息";
+            } else {
+                listTitle.add("学号");
+                fileName = "错误学生信息";
+            }
+            listTitle.add("姓名");
+            listTitle.add("性别");
+            listTitle.add("电话");
+            listTitle.add("邮箱");
+            listTitle.add("学院代码");
+            if ("student".equals(insertErrorQO.getType())) {
+                listTitle.add("班级号");
+            }
         }
-        listTitle.add("姓名");
-        listTitle.add("性别");
-        listTitle.add("电话");
-        listTitle.add("邮箱");
-        listTitle.add("学院代码");
-        if ("student".equals(insertErrorQO.getType())) {
-            listTitle.add("班级号");
-        }
+        exportExcel(response,fileName,listTitle,insertErrorQO.getDataList());
+    }
 
+    /**
+     * 导出数据
+     * @param response
+     * @param fileName
+     * @param listTitle
+     * @param datas
+     */
+    private void exportExcel(HttpServletResponse response,String fileName,List<String> listTitle,List<List<String>> datas) {
         try {
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName+".xlsx", "utf-8"));
             OutputStream outputStream = response.getOutputStream();
-            XSSFWorkbook workbook = ExcelUtil.exportExcel(fileName,listTitle,insertErrorQO.getDataList());
+            XSSFWorkbook workbook = ExcelUtil.exportExcel(fileName,listTitle,datas);
             workbook.write(outputStream);
             outputStream.flush();
             outputStream.close();
@@ -118,7 +165,7 @@ public class ManageServiceImpl implements ManageService {
      * @return
      */
     @Override
-    public InsertDTO insertUser(MultipartFile file, InsertQO insertQO) {
+    public InsertDTO insert(MultipartFile file, InsertQO insertQO) {
         InsertDTO insertDTO = new InsertDTO();
         //判断是否上传了文件
         if (file.isEmpty()) {
@@ -189,7 +236,7 @@ public class ManageServiceImpl implements ManageService {
                 insertDTO.getDataList().add(dataList);
             } else {
                 dataList.add("1");
-                //flag = manageMapper.insertUser(insertUserQO);
+                //flag = manageMapper.insert(insertQO);
                 //flag = 1;
                 if (flag!=0) {
                     successSum++;
