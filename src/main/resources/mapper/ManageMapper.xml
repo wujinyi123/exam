@@ -2,7 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.exam.mapper.user.ManageMapper">
-    <!--导入用户-->
+    <!--分页查询教师-->
+    <select id="pageTeacher" parameterType="com.system.exam.domain.qo.user.PageUserQO" resultType="com.system.exam.domain.dto.user.PageTeacherDTO">
+        select
+            t.number number,
+            t.name name,
+            t.sex sex,
+            c.name college,
+            c.code collegeCode,
+            t.tel tel,
+            t.email email
+        from teacher t
+        left join college c on t.college_code=c.code
+        where t.state='1' and c.state='1'
+        <if test="sex!=null and sex!='0'.toString()">
+            and t.sex=#{sex}
+        </if>
+        <if test="term!=null and term!=''">
+            and (c.name like concat('%',#{term},'%')
+            or c.code like concat('%',#{term},'%')
+            or t.number like concat('%',#{term},'%')
+            or t.name like concat('%',#{term},'%'))
+        </if>
+        order by number
+    </select>
+    <!--分页查询学生-->
+    <select id="pageStudent" parameterType="com.system.exam.domain.qo.user.PageUserQO" resultType="com.system.exam.domain.dto.user.PageStudentDTO">
+        select
+        t.number number,
+        t.name name,
+        t.sex sex,
+        c.name college,
+        c.code collegeCode,
+        cl.number clazz,
+        cl.name clazzName,
+        t.tel tel,
+        t.email email
+        from student t
+        left join college c on t.college_code=c.code
+        left join clazz cl on t.clazz_number=cl.number
+        where t.state='1' and c.state='1' and cl.state='1'
+        <if test="sex!=null and sex!='0'.toString()">
+            and t.sex=#{sex}
+        </if>
+        <if test="term!=null and term!=''">
+            and (c.name like concat('%',#{term},'%')
+            or c.code like concat('%',#{term},'%')
+            or t.number like concat('%',#{term},'%')
+            or t.name like concat('%',#{term},'%')
+            or cl.number like concat('%',#{term},'%')
+            or cl.name like concat('%',#{term},'%'))
+        </if>
+        order by number
+    </select>
+    <!--导入信息-->
     <insert id="insertUser" parameterType="com.system.exam.domain.qo.user.InsertQO">
 
     </insert>

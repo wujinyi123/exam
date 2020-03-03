@@ -2,9 +2,12 @@ package com.system.exam.service.user.impl;
 
 import com.system.exam.domain.dto.common.MbDTO;
 import com.system.exam.domain.dto.user.InsertDTO;
+import com.system.exam.domain.dto.user.PageStudentDTO;
+import com.system.exam.domain.dto.user.PageTeacherDTO;
 import com.system.exam.domain.qo.user.InsertErrorQO;
 import com.system.exam.domain.qo.user.InsertQO;
 import com.system.exam.domain.qo.user.IsNumberQO;
+import com.system.exam.domain.qo.user.PageUserQO;
 import com.system.exam.mapper.user.ManageMapper;
 import com.system.exam.service.user.ManageService;
 import com.system.exam.util.ExcelUtil;
@@ -27,6 +30,26 @@ import java.util.List;
 public class ManageServiceImpl implements ManageService {
     @Resource
     private ManageMapper manageMapper;
+
+    /**
+     * 分页查询教师
+     * @param pageUserQO
+     * @return
+     */
+    @Override
+    public List<PageTeacherDTO> pageTeacher(PageUserQO pageUserQO) {
+        return manageMapper.pageTeacher(pageUserQO);
+    }
+
+    /**
+     * 分页查询学生
+     * @param pageUserQO
+     * @return
+     */
+    @Override
+    public List<PageStudentDTO> pageStudent(PageUserQO pageUserQO) {
+        return manageMapper.pageStudent(pageUserQO);
+    }
 
     /**
      * 下载模板
@@ -251,6 +274,7 @@ public class ManageServiceImpl implements ManageService {
         insertDTO.setType(insertQO.getType());
         insertDTO.setSuccess(successSum+"");
         insertDTO.setFail(list.size()-successSum+"");
+        //insertDTO.setFail("0");
         insertDTO.setMsg("ok");
         return insertDTO;
     }
