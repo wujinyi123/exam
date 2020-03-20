@@ -1,13 +1,13 @@
 package com.system.exam.service.user;
 
-import com.system.exam.domain.dto.user.LoginDTO;
-import com.system.exam.domain.dto.user.UserInfoDTO;
-import com.system.exam.domain.dto.user.UdateDTO;
-import com.system.exam.domain.dto.user.UserDTO;
+import com.system.exam.common.ResultEnums;
+import com.system.exam.domain.dto.common.ImgUploadDTO;
+import com.system.exam.domain.dto.user.*;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
 import com.system.exam.domain.qo.user.UserMsgQO;
 import com.system.exam.domain.qo.user.UserQO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户业务层接口类
@@ -47,4 +47,11 @@ public interface UserService {
      */
     UdateDTO udateTelEmail(UdateQO udateQO);
 
+    /**
+     * 上传头像
+     * @param file
+     * @param type
+     * @return
+     */
+    ImgUploadDTO imgUpload(MultipartFile file, String type);
 }

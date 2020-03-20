@@ -19,11 +19,13 @@ public class NewBuiltExamQO {
     /**
      * 考试码
      */
+    @NotBlank(message = "考试码不能为空")
     private String examCode;
 
     /**
      * 考试名称
      */
+    @NotBlank(message = "考试名称不能为空")
     private String examName;
 
     /**
@@ -35,16 +37,19 @@ public class NewBuiltExamQO {
     /**
      * 总分
      */
+    @NotBlank(message = "总分不能为空")
     private String score;
 
     /**
      * 考试时间
      */
+    @NotBlank(message = "考试时间不能为空")
     private String time;
 
     /**
      * 截止时间
      */
+    @NotBlank(message = "截止时间不能为空")
     private String expTime;
 
     /**

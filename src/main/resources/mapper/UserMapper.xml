@@ -81,4 +81,14 @@
         SET tel=#{tel},email=#{email} WHERE number=#{number}
     </update>
 
+    <!--上传头像-->
+    <update id="udateImg" parameterType="com.system.exam.domain.qo.user.UdateQO">
+        UPDATE
+        <choose>
+            <when test="userType=='admin'.toString()">admin</when>
+            <when test="userType=='teacher'.toString()">teacher</when>
+            <otherwise>student</otherwise>
+        </choose>
+        SET img_path=#{img} WHERE number=#{number}
+    </update>
 </mapper>

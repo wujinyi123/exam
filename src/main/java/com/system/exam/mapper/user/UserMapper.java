@@ -54,4 +54,10 @@ public interface UserMapper {
      */
     int udateTelEmail(UdateQO udateQO);
 
+    /**
+     * 上传头像
+     * @param udateQO
+     * @return
+     */
+    int udateImg(UdateQO udateQO);
 }

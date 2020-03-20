@@ -46,4 +46,9 @@ public class UdateQO {
      */
     private String email;
 
+    /**
+     * 头像
+     */
+    private String img;
+
 }

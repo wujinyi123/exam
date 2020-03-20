@@ -1,20 +1,20 @@
 package com.system.exam.service.user.impl;
 
 import com.system.exam.common.IUserSession;
-import com.system.exam.domain.dto.user.LoginDTO;
-import com.system.exam.domain.dto.user.UserInfoDTO;
-import com.system.exam.domain.dto.user.UdateDTO;
-import com.system.exam.domain.dto.user.UserDTO;
+import com.system.exam.common.ImgOperate;
+import com.system.exam.domain.dto.common.ImgUploadDTO;
+import com.system.exam.domain.dto.user.*;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
 import com.system.exam.domain.qo.user.UserMsgQO;
 import com.system.exam.domain.qo.user.UserQO;
 import com.system.exam.mapper.user.UserMapper;
 import com.system.exam.service.user.UserService;
+import com.system.exam.common.impl.ImgOperateImpl;
 import com.system.exam.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -28,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private IUserSession userSession;
+
+    @Autowired
+    private ImgOperate imgOperate;
 
     /**
      * 用户登录
@@ -130,6 +133,28 @@ public class UserServiceImpl implements UserService {
         } else {
             return new UdateDTO("no", "系统异常");
         }
+    }
+
+    /**
+     * 上传头像
+     * @param file
+     * @param type
+     * @return
+     */
+    @Override
+    public ImgUploadDTO imgUpload(MultipartFile file, String type) {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser(type+"ExamSystem");
+        ImgUploadDTO imgUploadDTO = imgOperate.imgUpload(file,"/"+type+"/"+userDTO.getNumber());
+
+        if (!"0".equals(imgUploadDTO.getCode())) {
+            UdateQO udateQO = new UdateQO();
+            udateQO.setUserType(type);
+            udateQO.setNumber(userDTO.getNumber());
+            udateQO.setImg(imgUploadDTO.getImgUrl());
+            userMapper.udateImg(udateQO);
+        }
+        return imgUploadDTO;
     }
 
 }

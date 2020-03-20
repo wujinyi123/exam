@@ -2,10 +2,8 @@ package com.system.exam.controller.exam;
 
 import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
-import com.system.exam.domain.dto.exam.EnterExamDTO;
-import com.system.exam.domain.dto.exam.ExamDTO;
-import com.system.exam.domain.dto.exam.ExamResultDTO;
-import com.system.exam.domain.dto.exam.NewBuiltExamDTO;
+import com.system.exam.domain.dto.common.ImgUploadDTO;
+import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewBuiltExamQO;
@@ -14,6 +12,7 @@ import com.system.exam.service.exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -105,6 +104,26 @@ public class ExamController {
     @PostMapping("/newBuiltExam")
     public ResponseData<NewBuiltExamDTO> newBuiltExam(@RequestBody @Valid NewBuiltExamQO newBuiltExamQO) {
         return ResponseDataUtil.buildSuccess(examService.newBuiltExam(newBuiltExamQO));
+    }
+
+    /**
+     * 得到一个新的考试码
+     * @return
+     */
+    @PostMapping("/getNewExamCode")
+    public ResponseData<CodeAndNumberDTO> getNewExamCode() {
+        return ResponseDataUtil.buildSuccess(examService.getNewExamCode());
+    }
+
+    /**
+     * 上传图片
+     * @param file
+     * @param imgUrl
+     * @return
+     */
+    @PostMapping("/imgUpload")
+    public ResponseData<ImgUploadDTO> imgUpload(@RequestParam(value = "file") MultipartFile file, @RequestParam String imgUrl) {
+        return ResponseDataUtil.buildSuccess(examService.imgUpload(file,imgUrl));
     }
 
 }

@@ -2,6 +2,8 @@ package com.system.exam.service.exam.impl;
 
 import com.system.exam.common.ICheckAnswer;
 import com.system.exam.common.IUserSession;
+import com.system.exam.common.ImgOperate;
+import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.exam.AnswerQO;
@@ -12,11 +14,10 @@ import com.system.exam.mapper.exam.ExamMapper;
 import com.system.exam.service.exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 考试业务层实现类
@@ -31,6 +32,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Autowired
     private ICheckAnswer checkAnswer;
+
+    @Autowired
+    private ImgOperate imgOperate;
 
     /**
      * 查询考试码（学生）
@@ -168,8 +172,37 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public NewBuiltExamDTO newBuiltExam(NewBuiltExamQO newBuiltExamQO) {
         NewBuiltExamDTO newBuiltExamDTO = new NewBuiltExamDTO();
-        newBuiltExamDTO.setExamCode(UUID.randomUUID().toString());
+        newBuiltExamDTO.setExamCode(newBuiltExamQO.getExamCode());
+        newBuiltExamDTO.setExamName(newBuiltExamQO.getExamName());
+        newBuiltExamDTO.setScore(newBuiltExamQO.getScore());
+        newBuiltExamDTO.setTime(newBuiltExamQO.getTime());
+        newBuiltExamDTO.setExpTime(newBuiltExamQO.getExpTime());
+
+        newBuiltExamDTO.setState("ok");
         return newBuiltExamDTO;
+    }
+
+    @Override
+    public CodeAndNumberDTO getNewExamCode() {
+        CodeAndNumberDTO codeAndNumberDTO = new CodeAndNumberDTO();
+        codeAndNumberDTO.setCode(UUID.randomUUID().toString());
+
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("teacherExamSystem");
+        codeAndNumberDTO.setNumber(userDTO.getNumber());
+        return codeAndNumberDTO;
+    }
+
+    /**
+     * 上传图片
+     * @param file
+     * @param imgUrl
+     * @return
+     */
+    @Override
+    public ImgUploadDTO imgUpload(MultipartFile file, String imgUrl) {
+        ImgUploadDTO imgUploadDTO = imgOperate.imgUpload(file,imgUrl);
+        return imgUploadDTO;
     }
 
 }

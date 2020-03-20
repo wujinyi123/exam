@@ -2,10 +2,8 @@ package com.system.exam.controller.user;
 
 import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
-import com.system.exam.domain.dto.user.LoginDTO;
-import com.system.exam.domain.dto.user.UserInfoDTO;
-import com.system.exam.domain.dto.user.UdateDTO;
-import com.system.exam.domain.dto.user.UserDTO;
+import com.system.exam.domain.dto.common.ImgUploadDTO;
+import com.system.exam.domain.dto.user.*;
 import com.system.exam.domain.qo.user.LoginQO;
 import com.system.exam.domain.qo.user.UdateQO;
 import com.system.exam.domain.qo.user.UserMsgQO;
@@ -13,10 +11,8 @@ import com.system.exam.domain.qo.user.UserQO;
 import com.system.exam.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -78,6 +74,17 @@ public class UserController {
     @PostMapping("udateTelEmail")
     public ResponseData<UdateDTO> udateTelEmail(@RequestBody @Valid UdateQO udateQO) {
         return ResponseDataUtil.buildSuccess(userService.udateTelEmail(udateQO));
+    }
+
+    /**
+     * 上传头像
+     * @param file
+     * @param type
+     * @return
+     */
+    @PostMapping("/imgUpload")
+    public ResponseData<ImgUploadDTO> imgUpload(@RequestParam(value = "file") MultipartFile file, @RequestParam String type) {
+        return ResponseDataUtil.buildSuccess(userService.imgUpload(file,type));
     }
 
 }

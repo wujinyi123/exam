@@ -1,16 +1,16 @@
 package com.system.exam.service.exam;
 
 import com.system.exam.common.ResultEnums;
-import com.system.exam.domain.dto.exam.EnterExamDTO;
-import com.system.exam.domain.dto.exam.ExamDTO;
-import com.system.exam.domain.dto.exam.ExamResultDTO;
-import com.system.exam.domain.dto.exam.NewBuiltExamDTO;
+import com.system.exam.domain.dto.common.ImgUploadDTO;
+import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewBuiltExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 考试业务层接口类
@@ -71,4 +71,17 @@ public interface ExamService {
      */
     NewBuiltExamDTO newBuiltExam(NewBuiltExamQO newBuiltExamQO);
 
+    /**
+     * 得到一个新的考试码
+     * @return
+     */
+    CodeAndNumberDTO getNewExamCode();
+
+    /**
+     * 上传图片
+     * @param file
+     * @param imgUrl
+     * @return
+     */
+    ImgUploadDTO imgUpload(MultipartFile file, String imgUrl);
 }
