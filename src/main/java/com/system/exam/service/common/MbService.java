@@ -21,5 +21,4 @@ public interface MbService {
      * @return
      */
     List<MbDTO> listCollege();
-
 }
