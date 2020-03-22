@@ -154,4 +154,21 @@
         update answer set score=#{stuScore}
         where state='1' and exam_code=#{examCode} and student_number=#{number}
     </update>
+
+    <!--教师分页查询考试-->
+    <select id="pageExam" parameterType="com.system.exam.domain.qo.exam.PageExamQO" resultType="com.system.exam.domain.dto.exam.PageExamDTO">
+        select
+            exam_code examCode,
+            exam_name examName,
+            score score,
+            time time,
+            date_format(pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+            date_format(exp_time,'%Y-%m-%d %H:%i:%s') expDate
+        from exam
+        where state='1' and teacher_number=#{teacherNumber}
+        <if test="examTerm!=null and examTerm!=''">
+            and (exam_code like concat('%',#{examTerm},'%')
+            or exam_name like concat('%',#{examTerm},'%'))
+        </if>
+    </select>
 </mapper>

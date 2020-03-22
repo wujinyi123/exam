@@ -89,11 +89,6 @@ public class NewBuiltQuestionQO {
     private String imgD;
 
     /**
-     * 答案img
-     */
-    private String imgAnswer;
-
-    /**
      * 答案解析img
      */
     private String imgAnalysis;

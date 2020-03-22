@@ -4,6 +4,7 @@ import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.qo.exam.AnswerQO;
 import com.system.exam.domain.qo.exam.ExamQO;
 import com.system.exam.domain.qo.exam.NewExamQO;
+import com.system.exam.domain.qo.exam.PageExamQO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -83,4 +84,10 @@ public interface ExamMapper {
      */
     int updateScore(ExamQO examQO);
 
+    /**
+     * 教师分页查询考试
+     * @param pageExamQO
+     * @return
+     */
+    List<PageExamDTO> pageExam(PageExamQO pageExamQO);
 }

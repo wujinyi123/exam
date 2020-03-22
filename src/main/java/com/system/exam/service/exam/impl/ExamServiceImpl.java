@@ -6,10 +6,7 @@ import com.system.exam.common.ImgOperate;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.dto.user.UserDTO;
-import com.system.exam.domain.qo.exam.AnswerQO;
-import com.system.exam.domain.qo.exam.ExamQO;
-import com.system.exam.domain.qo.exam.NewBuiltExamQO;
-import com.system.exam.domain.qo.exam.NewExamQO;
+import com.system.exam.domain.qo.exam.*;
 import com.system.exam.mapper.exam.ExamMapper;
 import com.system.exam.service.exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,6 +200,19 @@ public class ExamServiceImpl implements ExamService {
     public ImgUploadDTO imgUpload(MultipartFile file, String imgUrl) {
         ImgUploadDTO imgUploadDTO = imgOperate.imgUpload(file,imgUrl);
         return imgUploadDTO;
+    }
+
+    /**
+     * 教师分页查询考试
+     * @param pageExamQO
+     * @return
+     */
+    @Override
+    public List<PageExamDTO> pageExam(PageExamQO pageExamQO) {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("teacherExamSystem");
+        pageExamQO.setTeacherNumber(userDTO.getNumber());
+        return examMapper.pageExam(pageExamQO);
     }
 
 }

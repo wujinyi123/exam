@@ -4,10 +4,7 @@ import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.exam.*;
-import com.system.exam.domain.qo.exam.AnswerQO;
-import com.system.exam.domain.qo.exam.ExamQO;
-import com.system.exam.domain.qo.exam.NewBuiltExamQO;
-import com.system.exam.domain.qo.exam.NewExamQO;
+import com.system.exam.domain.qo.exam.*;
 import com.system.exam.service.exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 考试
@@ -124,6 +120,16 @@ public class ExamController {
     @PostMapping("/imgUpload")
     public ResponseData<ImgUploadDTO> imgUpload(@RequestParam(value = "file") MultipartFile file, @RequestParam String imgUrl) {
         return ResponseDataUtil.buildSuccess(examService.imgUpload(file,imgUrl));
+    }
+
+    /**
+     * 教师分页查询考试
+     * @param pageExamQO
+     * @return
+     */
+    @GetMapping("/pageExam")
+    public ResponseData<List<PageExamDTO>> pageExam(@Valid PageExamQO pageExamQO) {
+        return ResponseDataUtil.buildSuccess(examService.pageExam(pageExamQO), pageExamQO);
     }
 
 }
