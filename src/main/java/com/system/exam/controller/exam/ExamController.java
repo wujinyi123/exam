@@ -131,5 +131,4 @@ public class ExamController {
     public ResponseData<List<PageExamDTO>> pageExam(@Valid PageExamQO pageExamQO) {
         return ResponseDataUtil.buildSuccess(examService.pageExam(pageExamQO), pageExamQO);
     }
-
 }
