@@ -123,6 +123,16 @@ public class ExamController {
     }
 
     /**
+     * 删除图片
+     * @param imgUrl
+     * @return
+     */
+    @PostMapping("/deleteImg")
+    public ResponseData<String> deleteImg(@RequestParam String imgUrl) {
+        return ResponseDataUtil.buildSuccess(examService.deleteImg(imgUrl));
+    }
+
+    /**
      * 教师分页查询考试
      * @param pageExamQO
      * @return

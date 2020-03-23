@@ -14,4 +14,11 @@ public interface ImgOperate {
      * @return
      */
     ImgUploadDTO imgUpload(MultipartFile file, String imgUrl);
+
+    /**
+     * 删除图片
+     * @param imgUrl
+     * @return
+     */
+    String deleteImg(String imgUrl);
 }

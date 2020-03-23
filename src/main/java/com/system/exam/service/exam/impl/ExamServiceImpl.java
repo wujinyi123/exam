@@ -9,11 +9,13 @@ import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.exam.*;
 import com.system.exam.mapper.exam.ExamMapper;
 import com.system.exam.service.exam.ExamService;
+import com.system.exam.util.ExamCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -182,7 +184,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public CodeAndNumberDTO getNewExamCode() {
         CodeAndNumberDTO codeAndNumberDTO = new CodeAndNumberDTO();
-        codeAndNumberDTO.setCode(UUID.randomUUID().toString());
+        codeAndNumberDTO.setCode(ExamCodeUtil.getCode());
 
         //获取当前用户
         UserDTO userDTO = userSession.getUser("teacherExamSystem");
@@ -200,6 +202,11 @@ public class ExamServiceImpl implements ExamService {
     public ImgUploadDTO imgUpload(MultipartFile file, String imgUrl) {
         ImgUploadDTO imgUploadDTO = imgOperate.imgUpload(file,imgUrl);
         return imgUploadDTO;
+    }
+
+    @Override
+    public String deleteImg(String imgUrl) {
+        return imgOperate.deleteImg(imgUrl);
     }
 
     /**

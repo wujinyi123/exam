@@ -83,6 +83,13 @@ public interface ExamService {
     ImgUploadDTO imgUpload(MultipartFile file, String imgUrl);
 
     /**
+     * 删除图片
+     * @param imgUrl
+     * @return
+     */
+    String deleteImg(String imgUrl);
+
+    /**
      * 教师分页查询考试
      * @param pageExamQO
      * @return

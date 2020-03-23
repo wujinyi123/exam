@@ -4,6 +4,7 @@ import com.system.exam.common.ImgOperate;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -49,5 +50,18 @@ public class ImgOperateImpl implements ImgOperate {
         imgUploadDTO.setCode("1");
         imgUploadDTO.setImgUrl(fileurl);
         return imgUploadDTO;
+    }
+
+    @Override
+    public String deleteImg(String imgUrl) {
+        if (imgUrl==null || "".equals(imgUrl)) {
+            return "no";
+        }
+        File file = new File(imgIp + imgUrl);
+        if (!file.exists()) {
+            return "no";
+        }
+        file.delete();
+        return "ok";
     }
 }
