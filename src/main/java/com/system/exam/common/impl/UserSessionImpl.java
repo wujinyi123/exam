@@ -97,6 +97,8 @@ public class UserSessionImpl implements IUserSession {
         T t = null;
         if (!StringUtils.isEmpty(token)) {
             t = (T)redisTemplate.opsForValue().get(key + ":" + token);
+        } else {
+            t = (T) new Object();
         }
         return t;
     }
@@ -148,6 +150,9 @@ public class UserSessionImpl implements IUserSession {
     @Override
     public String getUserToken(String key) {
         Cookie[] cookies = request.getCookies();
+        if (cookies==null) {
+            cookies = new Cookie[]{};
+        }
         String token = "";
         for (Cookie cookie : cookies) {
             if (key.equals(cookie.getName())) {

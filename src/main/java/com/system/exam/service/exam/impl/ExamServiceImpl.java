@@ -181,6 +181,10 @@ public class ExamServiceImpl implements ExamService {
         return newBuiltExamDTO;
     }
 
+    /**
+     * 得到一个新的考试码
+     * @return
+     */
     @Override
     public CodeAndNumberDTO getNewExamCode() {
         CodeAndNumberDTO codeAndNumberDTO = new CodeAndNumberDTO();
@@ -207,6 +211,22 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public String deleteImg(String imgUrl) {
         return imgOperate.deleteImg(imgUrl);
+    }
+
+    /**
+     * 考试通知
+     * @param examNoticeQO
+     * @return
+     */
+    @Override
+    public String examNotice(ExamNoticeQO examNoticeQO) {
+        if (examMapper.countNotice(examNoticeQO)!=0) {
+            return "2";
+        }
+        if (examMapper.examNotice(examNoticeQO)!=0) {
+            return "1";
+        }
+        return "0";
     }
 
     /**

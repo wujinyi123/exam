@@ -37,26 +37,27 @@
 
     <!--获取未参加且未超过截止时间的考试（学生）-->
     <select id="pageNewExam" parameterType="com.system.exam.domain.qo.exam.NewExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
-        SELECT
-		t.exam_code examCode,
-		t.exam_name examName,
-		t.score score,
-		(select
-			concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
-			from teacher te
-			where te.number=t.teacher_number) teacherName,
-		concat(t.time,'分钟') time,
-		date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
-		date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
-		t.exp_time exp
-		FROM exam_message em
-			LEFT JOIN exam t on em.exam_code=t.exam_code
-			LEFT JOIN answer ans on t.exam_code=ans.exam_code and ans.student_number=em.student_number
-		WHERE t.state='1' and em.state='1'
-		and (ans.state is null or ans.state!='1')
-		and t.exp_time>SYSDATE()
-		and em.student_number=#{number}
-		ORDER BY t.exp_time,t.exam_code
+        select
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            (select
+                concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
+                from teacher te
+                where te.number=t.teacher_number) teacherName,
+            concat(t.time,'分钟') time,
+            date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+            date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate
+        from exam_message em
+        left join exam t on em.exam_code=t.exam_code
+        left join
+            (select stu.clazz_number clazz_number,a.exam_code exam_code,'1' isFinish
+            from answer a left join student stu on a.student_number=stu.number
+            where a.state='1' and stu.state='1' and a.student_number=#{number}) ans
+            on em.clazz_number=ans.clazz_number and em.exam_code=ans.exam_code
+        where t.state='1' and em.state='1' and ans.isFinish is null and t.exp_time>SYSDATE()
+            and em.clazz_number=(select clazz_number from student where number=#{number})
+        ORDER BY t.exp_time,t.exam_code
     </select>
 
     <!--近期（5条）考试成绩 （学生）-->
@@ -171,4 +172,14 @@
             or exam_name like concat('%',#{examTerm},'%'))
         </if>
     </select>
+
+    <select id="countNotice" parameterType="com.system.exam.domain.qo.exam.ExamNoticeQO" resultType="int">
+        select count(1) from exam_message
+        where state='1' and exam_code=#{examCode} and clazz_number=#{clazzNumber}
+    </select>
+
+    <insert id="examNotice" parameterType="com.system.exam.domain.qo.exam.ExamNoticeQO">
+        insert into exam_message(exam_code,clazz_number,state)
+        values (#{examCode},#{clazzNumber},'1');
+    </insert>
 </mapper>

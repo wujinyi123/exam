@@ -133,6 +133,16 @@ public class ExamController {
     }
 
     /**
+     * 考试通知
+     * @param examNoticeQO
+     * @return
+     */
+    @PostMapping("/examNotice")
+    public ResponseData<String> examNotice(@RequestBody @Valid ExamNoticeQO examNoticeQO) {
+        return ResponseDataUtil.buildSuccess(examService.examNotice(examNoticeQO));
+    }
+
+    /**
      * 教师分页查询考试
      * @param pageExamQO
      * @return

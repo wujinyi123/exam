@@ -18,4 +18,12 @@
         WHERE state='1'
     </select>
 
+    <select id="listClazz" parameterType="string" resultType="com.system.exam.domain.dto.common.MbDTO">
+        SELECT
+            number code,
+            number name
+        FROM clazz
+        WHERE state='1' and college_code=#{code}
+    </select>
+
 </mapper>

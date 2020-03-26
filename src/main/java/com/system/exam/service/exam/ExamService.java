@@ -90,6 +90,13 @@ public interface ExamService {
     String deleteImg(String imgUrl);
 
     /**
+     * 考试通知
+     * @param examNoticeQO
+     * @return
+     */
+    String examNotice(ExamNoticeQO examNoticeQO);
+
+    /**
      * 教师分页查询考试
      * @param pageExamQO
      * @return

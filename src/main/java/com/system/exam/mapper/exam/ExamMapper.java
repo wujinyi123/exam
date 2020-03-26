@@ -1,10 +1,7 @@
 package com.system.exam.mapper.exam;
 
 import com.system.exam.domain.dto.exam.*;
-import com.system.exam.domain.qo.exam.AnswerQO;
-import com.system.exam.domain.qo.exam.ExamQO;
-import com.system.exam.domain.qo.exam.NewExamQO;
-import com.system.exam.domain.qo.exam.PageExamQO;
+import com.system.exam.domain.qo.exam.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -90,4 +87,18 @@ public interface ExamMapper {
      * @return
      */
     List<PageExamDTO> pageExam(PageExamQO pageExamQO);
+
+    /**
+     * 是否已通知
+     * @param examNoticeQO
+     * @return
+     */
+    int countNotice(ExamNoticeQO examNoticeQO);
+
+    /**
+     * 考试通知
+     * @param examNoticeQO
+     * @return
+     */
+    int examNotice(ExamNoticeQO examNoticeQO);
 }

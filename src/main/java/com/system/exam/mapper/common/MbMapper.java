@@ -24,4 +24,10 @@ public interface MbMapper {
      */
     List<MbDTO> listCollege();
 
+    /**
+     * 学院所有班级
+     * @param code
+     * @return
+     */
+    List<MbDTO> listClazz(String code);
 }

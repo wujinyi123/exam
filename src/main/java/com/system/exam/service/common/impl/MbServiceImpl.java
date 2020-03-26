@@ -36,4 +36,14 @@ public class MbServiceImpl implements MbService {
         return mbMapper.listCollege();
     }
 
+    /**
+     * 学院所有班级
+     * @param code
+     * @return
+     */
+    @Override
+    public List<MbDTO> listClazz(String code) {
+        return mbMapper.listClazz(code);
+    }
+
 }
