@@ -47,7 +47,7 @@ public class UserController {
     }
 
     /**
-     * 获取当前用户个人资料
+     * 获取用户个人资料
      * @param userQO
      * @return
      */

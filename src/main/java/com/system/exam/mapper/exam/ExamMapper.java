@@ -101,4 +101,32 @@ public interface ExamMapper {
      * @return
      */
     int examNotice(ExamNoticeQO examNoticeQO);
+
+    /**
+     * 查看试卷
+     * @param examCode
+     * @return
+     */
+    ExamInfoDTO getExamInfo(String examCode);
+
+    /**
+     * 删除小测
+     * @param examCode
+     * @return
+     */
+    int deleteExam(String examCode);
+
+    /**
+     * 班级成绩
+     * @param pageGradeQO
+     * @return
+     */
+    List<PageGradeDTO> pageGrade(PageGradeQO pageGradeQO);
+
+    /**
+     * 班级考试情况
+     * @param clazzGradeQO
+     * @return
+     */
+    ClazzGradeDTO clazzGrade(ClazzGradeQO clazzGradeQO);
 }

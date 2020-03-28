@@ -1,9 +1,12 @@
 package com.system.exam.service.common.impl;
 
+import com.system.exam.common.IUserSession;
 import com.system.exam.domain.dto.common.MbDTO;
+import com.system.exam.domain.dto.user.UserDTO;
 import com.system.exam.domain.qo.common.MbQO;
 import com.system.exam.mapper.common.MbMapper;
 import com.system.exam.service.common.MbService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,14 +20,18 @@ public class MbServiceImpl implements MbService {
     @Resource
     private MbMapper mbMapper;
 
+    @Autowired
+    private IUserSession userSession;
+
     /**
      * 考试码（教师端）
-     * @param mbQO
      * @return
      */
     @Override
-    public List<MbDTO> listExam(MbQO mbQO) {
-        return mbMapper.listExam(mbQO);
+    public List<MbDTO> listExam() {
+        //获取当前用户
+        UserDTO userDTO = userSession.getUser("teacherExamSystem");
+        return mbMapper.listExam(userDTO.getNumber());
     }
 
     /**

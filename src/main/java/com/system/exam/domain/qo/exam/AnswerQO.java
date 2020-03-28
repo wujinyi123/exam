@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * 提交答案QO
@@ -36,6 +37,12 @@ public class AnswerQO {
      * 多选答案，用英文逗号隔开
      */
     private String multipleAnswer;
+
+    /**
+     * 学生答案
+     */
+    private List<String> singleList;
+    private List<String> multipleList;
 
     /**
      * 成绩

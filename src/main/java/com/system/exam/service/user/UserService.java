@@ -28,7 +28,7 @@ public interface UserService {
     UserDTO getUserMsg(UserMsgQO userMsgQO);
 
     /**
-     * 获取当前用户个人资料
+     * 获取用户个人资料
      * @return
      */
     UserInfoDTO getUserInfo(UserQO userQO);

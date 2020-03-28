@@ -1,6 +1,7 @@
 package com.system.exam.common.impl;
 
 import com.system.exam.common.IUserSession;
+import com.system.exam.domain.dto.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> String saveUser(T obj) {
+    public String saveUser(UserDTO obj) {
         return saveUser(obj, 30);
     }
 
@@ -43,7 +44,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> String saveUser(T obj, String key) {
+    public String saveUser(UserDTO obj, String key) {
         return saveUser(obj, key, 30);
     }
 
@@ -56,7 +57,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> String saveUser(T obj, int time) {
+    public String saveUser(UserDTO obj, int time) {
         return saveUser(obj, "token", time);
     }
 
@@ -68,7 +69,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> String saveUser(T obj, String key, int time) {
+    public String saveUser(UserDTO obj, String key, int time) {
         String uuid = UUID.randomUUID().toString();
         redisTemplate.opsForValue().set(key+":"+uuid, obj, time, TimeUnit.MINUTES);
         return uuid;
@@ -81,7 +82,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> T getUser() {
+    public UserDTO getUser() {
         return getUser("token");
     }
 
@@ -92,13 +93,13 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> T getUser(String key) {
+    public UserDTO getUser(String key) {
         String token = getUserToken(key);
-        T t = null;
+        UserDTO t = null;
         if (!StringUtils.isEmpty(token)) {
-            t = (T)redisTemplate.opsForValue().get(key + ":" + token);
+            t = (UserDTO)redisTemplate.opsForValue().get(key + ":" + token);
         } else {
-            t = (T) new Object();
+            t = new UserDTO();
         }
         return t;
     }
@@ -110,7 +111,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> boolean deleteUser() {
+    public boolean deleteUser() {
         return deleteUser("token");
     }
 
@@ -121,9 +122,9 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> boolean deleteUser(String key) {
+    public boolean deleteUser(String key) {
         String token = getUserToken(key);
-        T t = (T)redisTemplate.opsForValue().get(key+":"+token);
+        UserDTO t = (UserDTO)redisTemplate.opsForValue().get(key+":"+token);
         if (t == null) {
             return false;
         } else {
@@ -170,8 +171,8 @@ public class UserSessionImpl implements IUserSession {
      * @param <T>
      * @return
      */
-    public <T> T getUserByKeyToken(String key, String token) {
-        return (T)redisTemplate.opsForValue().get(key + ":" + token);
+    public UserDTO getUserByKeyToken(String key, String token) {
+        return (UserDTO)redisTemplate.opsForValue().get(key + ":" + token);
     }
 
     /**
@@ -182,7 +183,7 @@ public class UserSessionImpl implements IUserSession {
      * @return
      */
     @Override
-    public <T> boolean updateUser(String key, T obj) {
+    public boolean updateUser(String key, UserDTO obj) {
         String token = getUserToken(key);
         if (token != null) {
             redisTemplate.opsForValue().set(key + ":" + token, obj);

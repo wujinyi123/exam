@@ -16,7 +16,7 @@
         WHERE state='1' AND number=#{number} AND password=#{password}
     </select>
 
-    <!--获取当前用户（管理员）个人资料-->
+    <!--获取管理员个人资料-->
     <select id="getAdminInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
             t.number number,
@@ -29,34 +29,35 @@
         WHERE t.state='1' AND t.number=#{number}
     </select>
 
-    <!--获取当前用户（教师）个人资料-->
+    <!--获取教师个人资料-->
     <select id="getTeacherInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
-            (SELECT name FROM college WHERE code=t.college_code) college,
+            c.name college,
             t.number number,
             t.name name,
             t.sex sex,
             t.tel tel,
             t.email email,
             t.img_path img
-        FROM teacher t
-        WHERE t.state='1' AND t.number=#{number}
+        FROM teacher t left join college c on t.college_code=c.code
+        WHERE t.state='1' and c.state='1' and t.number=#{number}
     </select>
 
-    <!--获取当前用户（学生）个人资料-->
+    <!--获取学生个人资料-->
     <select id="getStudentInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
-            (SELECT name FROM college WHERE code=stu.college_code) college,
-            (SELECT name FROM clazz WHERE number=stu.clazz_number) major,
-            (SELECT number FROM clazz WHERE number=stu.clazz_number) clazz,
+            co.name college,
+            cl.name major,
+            stu.clazz_number clazz,
             stu.number number,
             stu.name name,
             stu.sex sex,
             stu.tel tel,
             stu.email email,
             stu.img_path img
-        FROM student stu
-        WHERE stu.state='1' AND stu.number=#{number}
+        FROM student stu left join clazz cl on stu.clazz_number=cl.number
+        left join college co on cl.college_code=co.code
+        WHERE stu.state='1' and cl.state='1' and co.state='1' and stu.number=#{number}
     </select>
 
     <!--修改密码-->

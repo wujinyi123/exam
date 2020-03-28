@@ -24,12 +24,11 @@ public class MbController {
 
     /**
      * 考试码（教师端）
-     * @param mbQO
      * @return
      */
     @PostMapping("/listExam")
-    public ResponseData<List<MbDTO>> listExam(@RequestBody @Valid MbQO mbQO) {
-        return ResponseDataUtil.buildSuccess(mbService.listExam(mbQO));
+    public ResponseData<List<MbDTO>> listExam() {
+        return ResponseDataUtil.buildSuccess(mbService.listExam());
     }
 
     /**

@@ -13,10 +13,10 @@ import java.util.List;
 public interface MbMapper {
     /**
      * 考试码（教师端）
-     * @param mbQO
+     * @param number
      * @return
      */
-    List<MbDTO> listExam(MbQO mbQO);
+    List<MbDTO> listExam(String number);
 
     /**
      * 所有学院

@@ -12,10 +12,9 @@ import java.util.List;
 public interface MbService {
     /**
      * 考试码（教师端）
-     * @param mbQO
      * @return
      */
-    List<MbDTO> listExam(MbQO mbQO);
+    List<MbDTO> listExam();
 
     /**
      * 所有学院

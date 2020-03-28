@@ -19,9 +19,6 @@ import java.util.List;
  */
 @Component
 public class CheckAnswerImpl implements ICheckAnswer {
-    @Autowired
-    private HttpServletRequest request;
-
     /**
      * 得到考生考试结果
      * @param examResultDTO
@@ -31,17 +28,14 @@ public class CheckAnswerImpl implements ICheckAnswer {
     public void examResult(ExamResultDTO examResultDTO, AnswerQO answerQO) {
         //考试总分
         int stuScore = 0;
-        List<String> stuAnswers = null;
 
         //核对单选题
-        stuAnswers = new ArrayList<>();
-        stuScore += checkAnswer(0,stuAnswers,examResultDTO.getSingleAnswerList());
-        answerQO.setSingleAnswer(stuAnswers.toString());
+        stuScore += checkAnswer(answerQO.getSingleList(),examResultDTO.getSingleAnswerList());
+        answerQO.setSingleAnswer(answerQO.getSingleList().toString());
 
         //核对多选题
-        stuAnswers = new ArrayList<>();
-        stuScore += checkAnswer(1,stuAnswers,examResultDTO.getMultipleAnswerList());
-        answerQO.setMultipleAnswer(stuAnswers.toString());
+        stuScore += checkAnswer(answerQO.getMultipleList(),examResultDTO.getMultipleAnswerList());
+        answerQO.setMultipleAnswer(answerQO.getMultipleList().toString());
 
         //计算总分
         examResultDTO.setScore(stuScore+"");
@@ -85,54 +79,22 @@ public class CheckAnswerImpl implements ICheckAnswer {
 
     /**
      * 核对答案
-     * @param type
-     * @param stuAnswers
+     * @param stuAns
      * @param answerList
      * @return
      */
-    private int checkAnswer(int type, List<String> stuAnswers, List<AnswerDTO> answerList){
-        String[] typeArray = {"single_answer_","multiple_answer_"};
+    private int checkAnswer(List<String> stuAns, List<AnswerDTO> answerList){
         int len = answerList.size();
         int score = 0;
-        String stuAns = "";
+        String ansStr = "";
         for (int i=0; i<len; i++) {
-            stuAns = getStuAns(type,typeArray[type]+i);
-            if (stuAns == null) {
-                stuAns = "";
-            }
-            stuAnswers.add(stuAns);
-            answerList.get(i).setStuAnswer(stuAns);
-            if (stuAns.equals(answerList.get(i).getAnswer())) {
+            ansStr = stuAns.get(i);
+            answerList.get(i).setStuAnswer(ansStr);
+            if (ansStr.equals(answerList.get(i).getAnswer())) {
                 score += answerList.get(i).getScore();
             }
         }
         return score;
-    }
-
-    /**
-     * 根据题号获取考生当题答案
-     * @param type
-     * @param key
-     * @return
-     */
-    private String getStuAns(int type,String key) {
-        String strAns = "";
-        if (type==1) {
-            String[] arr = request.getParameterValues(key);
-            if (arr == null) {
-                arr = new String[0];
-            }
-            Arrays.sort(arr);
-            for (String str:arr) {
-                strAns += str;
-            }
-        } else {
-            strAns = request.getParameter(key);
-            if (strAns == null) {
-                strAns = "";
-            }
-        }
-        return strAns;
     }
 
 }

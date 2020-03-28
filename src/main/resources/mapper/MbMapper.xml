@@ -2,12 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.exam.mapper.common.MbMapper">
-    <select id="listExam" parameterType="com.system.exam.domain.qo.common.MbQO" resultType="com.system.exam.domain.dto.common.MbDTO">
+    <select id="listExam" parameterType="string" resultType="com.system.exam.domain.dto.common.MbDTO">
         SELECT
             exam_code code,
             exam_name name
         FROM exam
         WHERE state='1' AND teacher_number=#{number}
+        order by pd_time desc,exp_time
     </select>
 
     <select id="listCollege" resultType="com.system.exam.domain.dto.common.MbDTO">

@@ -7,7 +7,6 @@ import com.system.exam.domain.qo.exam.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 考试业务层接口类
@@ -102,4 +101,32 @@ public interface ExamService {
      * @return
      */
     List<PageExamDTO> pageExam(PageExamQO pageExamQO);
+
+    /**
+     * 查看试卷
+     * @param examCode
+     * @return
+     */
+    ExamInfoDTO getExamInfo(String examCode);
+
+    /**
+     * 删除小测
+     * @param examCode
+     * @return
+     */
+    String deleteExam(String examCode);
+
+    /**
+     * 班级成绩
+     * @param pageGradeQO
+     * @return
+     */
+    List<PageGradeDTO> pageGrade(PageGradeQO pageGradeQO);
+
+    /**
+     * 班级考试情况
+     * @param clazzGradeQO
+     * @return
+     */
+    ClazzGradeDTO clazzGrade(ClazzGradeQO clazzGradeQO);
 }

@@ -68,7 +68,7 @@ public class ExamController {
      * @return
      */
     @PostMapping("/submitAnswer")
-    public ResponseData<ExamResultDTO> submitAnswer(@Valid AnswerQO answerQO) {
+    public ResponseData<ExamResultDTO> submitAnswer(@RequestBody @Valid AnswerQO answerQO) {
         return ResponseDataUtil.buildSuccess(examService.submitAnswer(answerQO));
     }
 
@@ -150,5 +150,45 @@ public class ExamController {
     @GetMapping("/pageExam")
     public ResponseData<List<PageExamDTO>> pageExam(@Valid PageExamQO pageExamQO) {
         return ResponseDataUtil.buildSuccess(examService.pageExam(pageExamQO), pageExamQO);
+    }
+
+    /**
+     * 查看试卷
+     * @param examCode
+     * @return
+     */
+    @PostMapping("/getExamInfo")
+    public ResponseData<ExamInfoDTO> getExamInfo(@RequestParam @Valid String examCode) {
+        return ResponseDataUtil.buildSuccess(examService.getExamInfo(examCode));
+    }
+
+    /**
+     * 删除小测
+     * @param examCode
+     * @return
+     */
+    @PostMapping("/deleteExam")
+    public ResponseData<String> deleteExam(@RequestParam @Valid String examCode) {
+        return ResponseDataUtil.buildSuccess(examService.deleteExam(examCode));
+    }
+
+    /**
+     * 班级成绩
+     * @param pageGradeQO
+     * @return
+     */
+    @GetMapping("/pageGrade")
+    public ResponseData<List<PageGradeDTO>> pageGrade(@Valid PageGradeQO pageGradeQO) {
+        return ResponseDataUtil.buildSuccess(examService.pageGrade(pageGradeQO), pageGradeQO);
+    }
+
+    /**
+     * 班级考试情况
+     * @param clazzGradeQO
+     * @return
+     */
+    @PostMapping("/clazzGrade")
+    public ResponseData<ClazzGradeDTO> clazzGrade(@RequestBody @Valid ClazzGradeQO clazzGradeQO) {
+        return ResponseDataUtil.buildSuccess(examService.clazzGrade(clazzGradeQO));
     }
 }

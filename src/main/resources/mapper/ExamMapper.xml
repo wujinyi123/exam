@@ -182,4 +182,55 @@
         insert into exam_message(exam_code,clazz_number,state)
         values (#{examCode},#{clazzNumber},'1');
     </insert>
+
+    <select id="getExamInfo" parameterType="string" resultType="com.system.exam.domain.dto.exam.ExamInfoDTO">
+        select
+            exam_code examCode,exam_name examName,score,time,
+            date_format(pd_time,'%Y-%m-%d %H:%i:%s') pdTime,
+            date_format(exp_time,'%Y-%m-%d %H:%i:%s') expTime
+        from exam
+        where state='1' and exam_code=#{examCode}
+    </select>
+
+    <update id="deleteExam" parameterType="string">
+        update exam set state='0' where exam_code=#{examCode} and state='1'
+    </update>
+
+    <select id="pageGrade" parameterType="com.system.exam.domain.qo.exam.PageGradeQO" resultType="com.system.exam.domain.dto.exam.PageGradeDTO">
+        select
+            stu.number stuNumber,
+            stu.name stuName,
+            if(ans.score is null or ans.score='','未参加',ans.score) stuScore,
+            if(ans.use_time is null or ans.use_time='','--',ans.use_time) useTime,
+            if(ans.submit_time is null or ans.submit_time='',
+            '--',date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s')) submitTime
+        from student stu
+        left join
+            (select student_number,score,use_time,submit_time
+            from answer where state='1' and exam_code=#{examCode}) ans
+        on stu.number=ans.student_number
+        where stu.state='1' and stu.clazz_number=#{clazzNumber}
+        ORDER BY ans.score desc,stu.number
+    </select>
+
+    <select id="clazzGrade" parameterType="com.system.exam.domain.qo.exam.ClazzGradeQO" resultType="com.system.exam.domain.dto.exam.ClazzGradeDTO">
+        select
+            date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expTime,
+            t.score examScore,
+            convert(if(y.avgScore is null,0,y.avgScore),decimal(12,2)) avgScore,
+            y.clazzSize clazzSize,
+            if(y.finishSize is null,0,y.finishSize) finishSize
+        from exam t,
+            (select
+                avg(ans.score) avgScore,
+                count(1) clazzSize,
+                sum(ans.finish) finishSize
+            from student stu
+            left join
+            (select student_number,score,'1' finish
+            from answer where state='1' and exam_code=#{examCode}) ans
+            on stu.number=ans.student_number
+            where stu.state='1' and stu.clazz_number=#{clazzNumber}) y
+        where t.state='1' and t.exam_code=#{examCode}
+    </select>
 </mapper>

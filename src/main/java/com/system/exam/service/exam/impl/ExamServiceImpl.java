@@ -147,9 +147,11 @@ public class ExamServiceImpl implements ExamService {
         examQO.setType("2");
         examResultDTO.setMultipleAnswerList(examMapper.listAnswer(examQO));
 
-        //获取当前用户
-        UserDTO userDTO = userSession.getUser("studentExamSystem");
-        examQO.setNumber(userDTO.getNumber());
+        if (examQO.getNumber()==null || "".equals(examQO.getNumber())) {
+            //获取当前用户
+            UserDTO userDTO = userSession.getUser("studentExamSystem");
+            examQO.setNumber(userDTO.getNumber());
+        }
 
         //考生答案
         StuAnsDTO stuAnsDTO = examMapper.getStuAns(examQO);
@@ -240,6 +242,51 @@ public class ExamServiceImpl implements ExamService {
         UserDTO userDTO = userSession.getUser("teacherExamSystem");
         pageExamQO.setTeacherNumber(userDTO.getNumber());
         return examMapper.pageExam(pageExamQO);
+    }
+
+    /**
+     * 查看试卷
+     * @param examCode
+     * @return
+     */
+    @Override
+    public ExamInfoDTO getExamInfo(String examCode) {
+        ExamInfoDTO examInfoDTO = examMapper.getExamInfo(examCode);
+        ExamQO examQO = ExamQO.builder().examCode(examCode).type("1").build();
+        examInfoDTO.setSingleList(examMapper.listQuestion(examQO));
+        examQO.setType("2");
+        examInfoDTO.setMultipleList(examMapper.listQuestion(examQO));
+        return examInfoDTO;
+    }
+
+    /**
+     * 删除小测
+     * @param examCode
+     * @return
+     */
+    @Override
+    public String deleteExam(String examCode) {
+        return examMapper.deleteExam(examCode)+"";
+    }
+
+    /**
+     * 班级成绩
+     * @param pageGradeQO
+     * @return
+     */
+    @Override
+    public List<PageGradeDTO> pageGrade(PageGradeQO pageGradeQO) {
+        return examMapper.pageGrade(pageGradeQO);
+    }
+
+    /**
+     * 班级考试情况
+     * @param clazzGradeQO
+     * @return
+     */
+    @Override
+    public ClazzGradeDTO clazzGrade(ClazzGradeQO clazzGradeQO) {
+        return examMapper.clazzGrade(clazzGradeQO);
     }
 
 }

@@ -20,21 +20,21 @@ public interface UserMapper {
     UserDTO login(LoginQO loginQO);
 
     /**
-     * 获取当前用户（管理员）个人资料
+     * 获取管理员个人资料
      * @param userQO
      * @return
      */
     UserInfoDTO getAdminInfo(UserQO userQO);
 
     /**
-     * 获取当前用户（教师）个人资料
+     * 获取教师个人资料
      * @param userQO
      * @return
      */
     UserInfoDTO getTeacherInfo(UserQO userQO);
 
     /**
-     * 获取当前用户（学生）个人资料
+     * 获取学生个人资料
      * @param userQO
      * @return
      */
