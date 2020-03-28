@@ -200,7 +200,7 @@
         select
             stu.number stuNumber,
             stu.name stuName,
-            if(ans.score is null or ans.score='','未参加',ans.score) stuScore,
+            if((ans.score is null or ans.score='') and ans.score!='0','未参加',ans.score) stuScore,
             if(ans.use_time is null or ans.use_time='','--',ans.use_time) useTime,
             if(ans.submit_time is null or ans.submit_time='',
             '--',date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s')) submitTime
