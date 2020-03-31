@@ -10,12 +10,17 @@ import com.system.exam.domain.qo.exam.*;
 import com.system.exam.mapper.exam.ExamMapper;
 import com.system.exam.service.exam.ExamService;
 import com.system.exam.util.ExamCodeUtil;
+import com.system.exam.util.ExcelUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -80,6 +85,22 @@ public class ExamServiceImpl implements ExamService {
         List<ExamDTO> list =  examMapper.listNewScore(userDTO.getNumber());
         return list;
     }
+
+    /**
+     * 成绩统计
+     * @param pageStuScoreQO
+     * @return
+     */
+    @Override
+    public List<ExamDTO> pageStuScore(PageStuScoreQO pageStuScoreQO) {
+        if (pageStuScoreQO.getStuNumber()==null || "".equals(pageStuScoreQO.getStuNumber())) {
+            //获取当前用户
+            UserDTO userDTO = userSession.getUser("studentExamSystem");
+            pageStuScoreQO.setStuNumber(userDTO.getNumber());
+        }
+        return examMapper.pageStuScore(pageStuScoreQO);
+    }
+
 
     /**
      * 进入考试
@@ -179,8 +200,35 @@ public class ExamServiceImpl implements ExamService {
         newBuiltExamDTO.setTime(newBuiltExamQO.getTime());
         newBuiltExamDTO.setExpTime(newBuiltExamQO.getExpTime());
 
-        newBuiltExamDTO.setState("ok");
+        if (examMapper.insertExam(newBuiltExamQO)==1) {
+            newBuiltExamDTO.setState("ok");
+            int singleSum = insertQuestion(newBuiltExamQO.getSingleList());
+            int multipleSum = insertQuestion(newBuiltExamQO.getMultipleList());
+            if (singleSum!=newBuiltExamQO.getSingleList().size() || multipleSum!=newBuiltExamQO.getMultipleList().size()) {
+                newBuiltExamDTO.setState("no");
+                examMapper.deleteNewExam(newBuiltExamQO.getExamCode());
+                examMapper.deleteNewQuestion(newBuiltExamQO.getExamCode());
+            }
+        } else {
+            newBuiltExamDTO.setState("no");
+        }
+
         return newBuiltExamDTO;
+    }
+
+    /**
+     * 添加题目
+     * @param questionList
+     * @return
+     */
+    private int insertQuestion(List<NewBuiltQuestionQO> questionList) {
+        int sum = 0;
+        for (NewBuiltQuestionQO newBuiltQuestionQO:questionList) {
+            if (examMapper.insertQuestion(newBuiltQuestionQO)==1) {
+                sum++;
+            }
+        }
+        return sum;
     }
 
     /**
@@ -191,6 +239,10 @@ public class ExamServiceImpl implements ExamService {
     public CodeAndNumberDTO getNewExamCode() {
         CodeAndNumberDTO codeAndNumberDTO = new CodeAndNumberDTO();
         codeAndNumberDTO.setCode(ExamCodeUtil.getCode());
+
+        while (examMapper.checkCode(codeAndNumberDTO.getCode())!=0) {
+            codeAndNumberDTO.setCode(ExamCodeUtil.getCode());
+        }
 
         //获取当前用户
         UserDTO userDTO = userSession.getUser("teacherExamSystem");
@@ -280,6 +332,66 @@ public class ExamServiceImpl implements ExamService {
     }
 
     /**
+     * 导出成绩
+     * @param response
+     * @param clazzGradeQO
+     */
+    @Override
+    public void exportClazzGrade(HttpServletResponse response, ClazzGradeQO clazzGradeQO) {
+        List<String> listTitle = new ArrayList<>();
+        listTitle.add("考试码");
+        listTitle.add("小测名称");
+        listTitle.add("总分");
+        listTitle.add("学院");
+        listTitle.add("班级");
+        listTitle.add("专业");
+        listTitle.add("学号");
+        listTitle.add("姓名");
+        listTitle.add("成绩");
+        listTitle.add("用时");
+        listTitle.add("提交时间");
+
+        List<ExportClazzGradeDTO> list = null;
+
+        if ("all".equals(clazzGradeQO.getClazzNumber())) {
+            list = examMapper.exportGrade(clazzGradeQO);
+        } else {
+            list = examMapper.exportClazzGrade(clazzGradeQO);
+        }
+
+        List<List<String>> datas = new ArrayList<>();
+
+        List<String> dataList = null;
+        for (ExportClazzGradeDTO dto:list) {
+            dataList = new ArrayList<>();
+            dataList.add(dto.getExamCode());
+            dataList.add(dto.getExamName());
+            dataList.add(dto.getScore());
+            dataList.add(dto.getCollege());
+            dataList.add(dto.getClazz());
+            dataList.add(dto.getMajor());
+            dataList.add(dto.getStuNumber());
+            dataList.add(dto.getStuName());
+            dataList.add(dto.getStuScore());
+            dataList.add(dto.getUseTime());
+            dataList.add(dto.getSubmitTime());
+            datas.add(dataList);
+        }
+
+        try {
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(clazzGradeQO.getClazzNumber()+"成绩"+".xlsx", "utf-8"));
+            OutputStream outputStream = response.getOutputStream();
+            XSSFWorkbook workbook = ExcelUtil.exportExcel(clazzGradeQO.getClazzNumber()+"成绩",listTitle,datas);
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 班级考试情况
      * @param clazzGradeQO
      * @return
@@ -287,6 +399,21 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ClazzGradeDTO clazzGrade(ClazzGradeQO clazzGradeQO) {
         return examMapper.clazzGrade(clazzGradeQO);
+    }
+
+    /**
+     * 最新成绩
+     * @param teacherNumber
+     * @return
+     */
+    @Override
+    public List<NewStuScoreDTO> newStuScore(String teacherNumber) {
+        if (teacherNumber==null || "".equals(teacherNumber)) {
+            //获取当前用户
+            UserDTO userDTO = userSession.getUser("teacherExamSystem");
+            teacherNumber = userDTO.getNumber();
+        }
+        return examMapper.newStuScore(teacherNumber);
     }
 
 }

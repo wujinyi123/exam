@@ -21,6 +21,13 @@ public interface UserService {
     LoginDTO login(LoginQO loginQO);
 
     /**
+     * 更新登录
+     * @param userType
+     * @return
+     */
+    LoginDTO relogin(String userType);
+
+    /**
      * 获取用户信息
      * @param userMsgQO
      * @return

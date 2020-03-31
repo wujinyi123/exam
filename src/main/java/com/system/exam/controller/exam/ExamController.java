@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -50,6 +51,15 @@ public class ExamController {
     @PostMapping("/listNewScore")
     public ResponseData<List<ExamDTO>> listNewScore() {
         return ResponseDataUtil.buildSuccess(examService.listNewScore());
+    }
+
+    /**
+     * 成绩统计
+     * @return
+     */
+    @GetMapping("pageStuScore")
+    public ResponseData<List<ExamDTO>> pageStuScore(@Valid PageStuScoreQO pageStuScoreQO) {
+        return ResponseDataUtil.buildSuccess(examService.pageStuScore(pageStuScoreQO),pageStuScoreQO);
     }
 
     /**
@@ -183,6 +193,16 @@ public class ExamController {
     }
 
     /**
+     * 导出成绩
+     * @param response
+     * @param clazzGradeQO
+     */
+    @GetMapping("/exportClazzGrade")
+    public void exportClazzGrade(HttpServletResponse response,@Valid ClazzGradeQO clazzGradeQO) {
+        examService.exportClazzGrade(response,clazzGradeQO);
+    }
+
+    /**
      * 班级考试情况
      * @param clazzGradeQO
      * @return
@@ -191,4 +211,15 @@ public class ExamController {
     public ResponseData<ClazzGradeDTO> clazzGrade(@RequestBody @Valid ClazzGradeQO clazzGradeQO) {
         return ResponseDataUtil.buildSuccess(examService.clazzGrade(clazzGradeQO));
     }
+
+    /**
+     * 最新成绩
+     * @param teacherNumber
+     * @return
+     */
+    @PostMapping("/newStuScore")
+    public ResponseData<List<NewStuScoreDTO>> newStuScore(String teacherNumber) {
+        return ResponseDataUtil.buildSuccess(examService.newStuScore(teacherNumber));
+    }
+
 }

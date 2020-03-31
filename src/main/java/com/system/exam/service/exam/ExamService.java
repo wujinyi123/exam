@@ -1,11 +1,11 @@
 package com.system.exam.service.exam;
 
-import com.system.exam.common.ResultEnums;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.qo.exam.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -31,6 +31,13 @@ public interface ExamService {
      * @return
      */
     List<ExamDTO> listNewScore();
+
+    /**
+     * 成绩统计
+     * @param pageStuScoreQO
+     * @return
+     */
+    List<ExamDTO> pageStuScore(PageStuScoreQO pageStuScoreQO);
 
     /**
      * 进入考试
@@ -124,9 +131,24 @@ public interface ExamService {
     List<PageGradeDTO> pageGrade(PageGradeQO pageGradeQO);
 
     /**
+     * 导出成绩
+     * @param response
+     * @param clazzGradeQO
+     */
+    void exportClazzGrade(HttpServletResponse response, ClazzGradeQO clazzGradeQO);
+
+
+    /**
      * 班级考试情况
      * @param clazzGradeQO
      * @return
      */
     ClazzGradeDTO clazzGrade(ClazzGradeQO clazzGradeQO);
+
+    /**
+     * 最新成绩
+     * @param teacherNumber
+     * @return
+     */
+    List<NewStuScoreDTO> newStuScore(String teacherNumber);
 }

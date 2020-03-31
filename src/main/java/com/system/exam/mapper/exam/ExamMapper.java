@@ -129,4 +129,61 @@ public interface ExamMapper {
      * @return
      */
     ClazzGradeDTO clazzGrade(ClazzGradeQO clazzGradeQO);
+
+    /**
+     * 最新成绩
+     * @param teacherNumber
+     * @return
+     */
+    List<NewStuScoreDTO> newStuScore(String teacherNumber);
+
+    /**
+     * 全班成绩
+     * @param clazzGradeQO
+     * @return
+     */
+    List<ExportClazzGradeDTO> exportClazzGrade(ClazzGradeQO clazzGradeQO);
+
+    /**
+     * 成绩表
+     * @param clazzGradeQO
+     * @return
+     */
+    List<ExportClazzGradeDTO> exportGrade(ClazzGradeQO clazzGradeQO);
+
+    /**
+     * 校验考试码是否存在
+     * @param examCode
+     * @return
+     */
+    int checkCode(String examCode);
+
+    /**
+     * 添加考试
+     * @param newBuiltExamQO
+     * @return
+     */
+    int insertExam(NewBuiltExamQO newBuiltExamQO);
+
+    /**
+     * 添加题目
+     * @param newBuiltQuestionQO
+     * @return
+     */
+    int insertQuestion(NewBuiltQuestionQO newBuiltQuestionQO);
+
+    /**
+     * 删除新建的试卷
+     * @param examCode
+     * @return
+     */
+    int deleteNewExam(String examCode);
+    int deleteNewQuestion(String examCode);
+
+    /**
+     * 成绩统计
+     * @param pageStuScoreQO
+     * @return
+     */
+    List<ExamDTO> pageStuScore(PageStuScoreQO pageStuScoreQO);
 }

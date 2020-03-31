@@ -69,4 +69,9 @@ public class ExamDTO {
      */
     private String myScore;
 
+    /**
+     * 提交时间
+     */
+    private String submitTime;
+
 }

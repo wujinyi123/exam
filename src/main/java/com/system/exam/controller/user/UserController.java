@@ -37,6 +37,16 @@ public class UserController {
     }
 
     /**
+     * 更新登录
+     * @param userType
+     * @return
+     */
+    @PostMapping("/reLogin")
+    public ResponseData<LoginDTO> reLogin(@RequestParam String userType) {
+        return ResponseDataUtil.buildSuccess(userService.relogin(userType));
+    }
+
+    /**
      * 获取用户信息
      * @param userMsgQO
      * @return

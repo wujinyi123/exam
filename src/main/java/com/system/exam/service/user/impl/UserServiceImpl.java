@@ -58,6 +58,25 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 更新登录
+     * @param userType
+     * @return
+     */
+    @Override
+    public LoginDTO relogin(String userType) {
+        UserDTO userDTO = userSession.getUser(userType + "ExamSystem");
+        if (userDTO!=null) {
+            /**
+             * 存入缓存，并生成token，返回前端
+             * 管理员：adminExamSystem，教师：teacherExamSystem，学生：studentExamSystem
+             */
+            String token = userSession.saveUser(userDTO, userType+"ExamSystem");
+            return new LoginDTO("ok", token, userType);
+        }
+        return new LoginDTO("no","",userType);
+    }
+
+    /**
      * 获取用户信息
      * @param userMsgQO
      * @return

@@ -60,23 +60,46 @@
         ORDER BY t.exp_time,t.exam_code
     </select>
 
-    <!--近期（5条）考试成绩 （学生）-->
+    <!--考试成绩 （学生）-->
     <select id="listNewScore" parameterType="string" resultType="com.system.exam.domain.dto.exam.ExamDTO">
         select
             t.exam_code examCode,
             t.exam_name examName,
             t.score score,
-            (select
-                concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
-                from teacher te
-                where te.number=t.teacher_number) teacherName,
+            concat(co.name,',',te.name,'老师') teacherName,
             ans.use_time time,
-            ans.score myScore
+            ans.score myScore,
+            date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s') submitTime
         from answer ans
         left join exam t on ans.exam_code=t.exam_code
+        left join teacher te on t.teacher_number=te.number
+        left join college co on te.college_code=co.code
         where ans.state='1' and t.state='1' and ans.student_number=#{number}
+        ORDER BY ans.submit_time desc LIMIT 5
+    </select>
+
+    <select id="pageStuScore" parameterType="com.system.exam.domain.qo.exam.PageStuScoreQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
+        select
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            concat(co.name,',',te.name,'老师') teacherName,
+            ans.use_time time,
+            ans.score myScore,
+            date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s') submitTime
+        from answer ans
+        left join exam t on ans.exam_code=t.exam_code
+        left join teacher te on t.teacher_number=te.number
+        left join college co on te.college_code=co.code
+        where ans.state='1' and t.state='1' and ans.student_number=#{stuNumber}
+        <if test="term!=null and term!=''">
+            and (t.exam_code like concat('%',#{term},'%')
+            or t.exam_name like concat('%',#{term},'%')
+            or co.name like concat('%',#{term},'%')
+            or co.code like concat('%',#{term},'%')
+            or te.name like concat('%',#{term},'%'))
+        </if>
         ORDER BY ans.submit_time desc
-        LIMIT 5
     </select>
 
     <!--进入考试-->
@@ -213,6 +236,55 @@
         ORDER BY ans.score desc,stu.number
     </select>
 
+    <select id="exportClazzGrade" parameterType="com.system.exam.domain.qo.exam.ClazzGradeQO" resultType="com.system.exam.domain.dto.exam.ExportClazzGradeDTO">
+        select
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            co.name college,
+            cl.number clazz,
+            cl.name major,
+            stu.number stuNumber,
+            stu.name stuName,
+            if(ans.score is null or ans.score='' and ans.score!='0','未参加',ans.score) stuScore,
+            if(ans.use_time is null or ans.use_time='','--',ans.use_time) useTime,
+            if(ans.submit_time is null or ans.submit_time='',
+            '--',date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s')) submitTime
+        from student stu
+        left join
+                (select student_number,score,use_time,submit_time,exam_code
+                from answer where state='1' and exam_code=#{examCode}) ans
+        on stu.number=ans.student_number
+        left join clazz cl on stu.clazz_number=cl.number
+        left join college co on cl.college_code=co.code,
+        (select exam_code,exam_name,score from exam where state='1' and exam_code=#{examCode}) t
+        where stu.state='1' and cl.state='1' and co.state='1' and stu.clazz_number=#{clazzNumber}
+        ORDER BY ans.score desc,stu.number
+    </select>
+
+    <select id="exportGrade" parameterType="com.system.exam.domain.qo.exam.ClazzGradeQO" resultType="com.system.exam.domain.dto.exam.ExportClazzGradeDTO">
+        select
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            co.name college,
+            cl.number clazz,
+            cl.name major,
+            stu.number stuNumber,
+            stu.name stuName,
+            ans.score stuScore,
+            ans.use_time useTime,
+            date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s') submitTime
+        from answer ans
+        left join student stu on ans.student_number=stu.number
+        left join clazz cl on stu.clazz_number=cl.number
+        left join college co on cl.college_code=co.code
+        left join exam t on ans.exam_code=t.exam_code
+        WHERE ans.state='1' and stu.state='1' and cl.state='1'
+        and co.state='1' and t.state='1' and ans.exam_code=#{examCode}
+        ORDER BY co.id,cl.number,stu.number
+    </select>
+
     <select id="clazzGrade" parameterType="com.system.exam.domain.qo.exam.ClazzGradeQO" resultType="com.system.exam.domain.dto.exam.ClazzGradeDTO">
         select
             date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expTime,
@@ -233,4 +305,48 @@
             where stu.state='1' and stu.clazz_number=#{clazzNumber}) y
         where t.state='1' and t.exam_code=#{examCode}
     </select>
+
+    <select id="newStuScore" parameterType="string" resultType="com.system.exam.domain.dto.exam.NewStuScoreDTO">
+        select
+            stu.number stuNumber,
+            stu.name stuName,
+            co.name college,
+            cl.number clazz,
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score examScore,
+            ans.score stuScore,
+            ans.use_time useTime,
+            date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s') submitTime
+        from answer ans
+        left join exam t on ans.exam_code=t.exam_code
+        left join student stu on ans.student_number=stu.number
+        left join clazz cl on stu.clazz_number=cl.number
+        left join college co on cl.college_code=co.code
+        where ans.state='1' and t.state='1' and stu.state='1'
+        and t.teacher_number=#{teacherNumber}
+        order by ans.submit_time desc limit 10
+    </select>
+
+    <select id="checkCode" parameterType="string" resultType="int">
+        select count(1) from exam where exam_code=#{examCode}
+    </select>
+
+    <insert id="insertExam" parameterType="com.system.exam.domain.qo.exam.NewBuiltExamQO">
+        insert into exam(exam_code,exam_name,score,teacher_number,time,pd_time,exp_time,state)
+        values (#{examCode},#{examName},#{score},#{teacherNumber},#{time},SYSDATE(),#{expTime},'1')
+    </insert>
+
+    <insert id="insertQuestion" parameterType="com.system.exam.domain.qo.exam.NewBuiltQuestionQO">
+        insert into question(exam_code,type,score,question,option_a,option_b,option_c,option_d,answer,answer_analysis,img_question,img_a,img_b,img_c,img_d,img_analysis,state)
+        values (#{examCode},#{type},#{score},#{question},#{optionA},#{optionB},#{optionC},#{optionD},#{answer},#{analysis},#{imgQuestion},#{imgA},#{imgB},#{imgC},#{imgD},#{imgAnalysis},'1')
+    </insert>
+
+    <delete id="deleteNewExam" parameterType="string">
+        delete from exam WHERE exam_code=#{examCode}
+    </delete>
+
+    <delete id="deleteNewQuestion" parameterType="string">
+        delete from question WHERE exam_code=#{examCode}
+    </delete>
 </mapper>
