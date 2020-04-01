@@ -39,8 +39,8 @@
         t.tel tel,
         t.email email
         from student t
-        left join college c on t.college_code=c.code
         left join clazz cl on t.clazz_number=cl.number
+        left join college c on cl.college_code=c.code
         where t.state='1' and c.state='1' and cl.state='1'
         <if test="sex!=null and sex!='0'.toString()">
             and t.sex=#{sex}
