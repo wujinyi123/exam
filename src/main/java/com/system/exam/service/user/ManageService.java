@@ -52,8 +52,8 @@ public interface ManageService {
 
     /**
      * 导入错误
-     * @param insertErrorQO
+     * @param uuid
      * @param response
      */
-    void insertError(InsertErrorQO insertErrorQO, HttpServletResponse response);
+    void insertError(String uuid, HttpServletResponse response);
 }

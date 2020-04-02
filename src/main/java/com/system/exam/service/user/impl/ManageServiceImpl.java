@@ -12,6 +12,7 @@ import com.system.exam.mapper.user.ManageMapper;
 import com.system.exam.service.user.ManageService;
 import com.system.exam.util.ExcelUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,8 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 管理业务层实现类
@@ -30,6 +33,9 @@ import java.util.List;
 public class ManageServiceImpl implements ManageService {
     @Resource
     private ManageMapper manageMapper;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 分页查询教师
@@ -128,20 +134,24 @@ public class ManageServiceImpl implements ManageService {
 
     /**
      * 导入错误
-     * @param insertErrorQO
+     * @param uuid
      * @param response
      */
-    public void insertError(InsertErrorQO insertErrorQO, HttpServletResponse response) {
+    public void insertError(String uuid, HttpServletResponse response) {
+        InsertDTO insertDTO = (InsertDTO) redisTemplate.opsForValue().get(uuid);
+        if (insertDTO==null) {
+            return;
+        }
         String fileName = "";
         List<String> listTitle = new ArrayList<>();
-        if ("clazz".equals(insertErrorQO.getType())) {
+        if ("clazz".equals(insertDTO.getType())) {
             fileName = "错误班级信息";
             listTitle.add("学院代码");
             listTitle.add("年级（四位整数）");
             listTitle.add("班级号（学院代码+年级+XX）");
             listTitle.add("专业");
         } else {
-            if ("teacher".equals(insertErrorQO.getType())) {
+            if ("teacher".equals(insertDTO.getType())) {
                 listTitle.add("教师号");
                 fileName = "错误教师信息";
             } else {
@@ -153,11 +163,11 @@ public class ManageServiceImpl implements ManageService {
             listTitle.add("电话");
             listTitle.add("邮箱");
             listTitle.add("学院代码");
-            if ("student".equals(insertErrorQO.getType())) {
+            if ("student".equals(insertDTO.getType())) {
                 listTitle.add("班级号");
             }
         }
-        exportExcel(response,fileName,listTitle,insertErrorQO.getDataList());
+        exportExcel(response,fileName,listTitle,insertDTO.getDataList());
     }
 
     /**
@@ -276,6 +286,9 @@ public class ManageServiceImpl implements ManageService {
         insertDTO.setFail(list.size()-successSum+"");
         //insertDTO.setFail("0");
         insertDTO.setMsg("ok");
+        String uuid = UUID.randomUUID().toString();
+        insertDTO.setUuid(uuid);
+        redisTemplate.opsForValue().set(uuid, insertDTO, 30, TimeUnit.MINUTES);
         return insertDTO;
     }
 

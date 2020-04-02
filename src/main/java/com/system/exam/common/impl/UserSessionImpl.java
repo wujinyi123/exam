@@ -28,7 +28,6 @@ public class UserSessionImpl implements IUserSession {
      * 生成uuid(token)，并把用户存入Redis
      * 默认名字token
      * @param obj
-     * @param <T>
      * @return
      */
     @Override
@@ -40,7 +39,6 @@ public class UserSessionImpl implements IUserSession {
      * 生成uuid(token)，并把用户存入Redis
      * @param obj
      * @param key
-     * @param <T>
      * @return
      */
     @Override
@@ -53,7 +51,6 @@ public class UserSessionImpl implements IUserSession {
      * 默认项目名字token
      * @param obj
      * @param time
-     * @param <T>
      * @return
      */
     @Override
@@ -65,7 +62,6 @@ public class UserSessionImpl implements IUserSession {
      * 生成uuid(token)，并把用户存入Redis
      * @param obj
      * @param key
-     * @param <T>
      * @return
      */
     @Override
@@ -78,7 +74,6 @@ public class UserSessionImpl implements IUserSession {
     /**
      * 获取当前用户
      * 默认项目名字token
-     * @param <T>
      * @return
      */
     @Override
@@ -89,7 +84,6 @@ public class UserSessionImpl implements IUserSession {
     /**
      * 获取当前用户
      * @param key
-     * @param <T>
      * @return
      */
     @Override
@@ -107,7 +101,6 @@ public class UserSessionImpl implements IUserSession {
     /**
      * 删除uuid(token)对应的对象
      * 默认项目名字token
-     * @param <T>
      * @return
      */
     @Override
@@ -118,7 +111,6 @@ public class UserSessionImpl implements IUserSession {
     /**
      * 删除uuid(token)对应的对象
      * @param key
-     * @param <T>
      * @return
      */
     @Override
@@ -168,7 +160,6 @@ public class UserSessionImpl implements IUserSession {
      * 通过key和token获取用户信息
      * @param key
      * @param token
-     * @param <T>
      * @return
      */
     public UserDTO getUserByKeyToken(String key, String token) {
@@ -179,7 +170,6 @@ public class UserSessionImpl implements IUserSession {
      * 更新用户
      * @param key
      * @param obj
-     * @param <T>
      * @return
      */
     @Override

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InsertDTO {
+public class InsertDTO implements Serializable {
     /**
      * 类型
      */
@@ -24,6 +25,11 @@ public class InsertDTO {
      * 文件信息
      */
     private String msg;
+
+    /**
+     * 作为Redis的key值
+     */
+    private String uuid;
 
     /**
      * 数据组

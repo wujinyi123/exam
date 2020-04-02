@@ -70,12 +70,12 @@ public class ManageController {
 
     /**
      * 导入错误
-     * @param insertErrorQO
+     * @param uuid
      * @param response
      */
     @PostMapping("/insertError")
-    public void insertError(@RequestBody InsertErrorQO insertErrorQO, HttpServletResponse response) {
-        manageService.insertError(insertErrorQO,response);
+    public void insertError(@RequestParam String uuid, HttpServletResponse response) {
+        manageService.insertError(uuid,response);
     }
 
     /**
