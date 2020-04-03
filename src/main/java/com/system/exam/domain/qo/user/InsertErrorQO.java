@@ -21,6 +21,11 @@ public class InsertErrorQO {
     private String type;
 
     /**
+     * uuid
+     */
+    private String uuid;
+
+    /**
      * 数据组
      */
     private List<List<String>> dataList;

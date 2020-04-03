@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -134,24 +135,22 @@ public class ManageServiceImpl implements ManageService {
 
     /**
      * 导入错误
-     * @param uuid
+     * @param insertErrorQO
      * @param response
      */
-    public void insertError(String uuid, HttpServletResponse response) {
-        InsertDTO insertDTO = (InsertDTO) redisTemplate.opsForValue().get(uuid);
-        if (insertDTO==null) {
-            return;
-        }
+    public void insertError(InsertErrorQO insertErrorQO, HttpServletResponse response) {
         String fileName = "";
+        List<String> errorData = (List<String>) redisTemplate.opsForValue().get(insertErrorQO.getUuid());
+        insertErrorQO.setDataList(getErrorDataList(errorData));
         List<String> listTitle = new ArrayList<>();
-        if ("clazz".equals(insertDTO.getType())) {
+        if ("clazz".equals(insertErrorQO.getType())) {
             fileName = "错误班级信息";
             listTitle.add("学院代码");
             listTitle.add("年级（四位整数）");
             listTitle.add("班级号（学院代码+年级+XX）");
             listTitle.add("专业");
         } else {
-            if ("teacher".equals(insertDTO.getType())) {
+            if ("teacher".equals(insertErrorQO.getType())) {
                 listTitle.add("教师号");
                 fileName = "错误教师信息";
             } else {
@@ -163,11 +162,24 @@ public class ManageServiceImpl implements ManageService {
             listTitle.add("电话");
             listTitle.add("邮箱");
             listTitle.add("学院代码");
-            if ("student".equals(insertDTO.getType())) {
+            if ("student".equals(insertErrorQO.getType())) {
                 listTitle.add("班级号");
             }
         }
-        exportExcel(response,fileName,listTitle,insertDTO.getDataList());
+        exportExcel(response,fileName,listTitle,insertErrorQO.getDataList());
+    }
+
+    private List<List<String>> getErrorDataList(List<String> errorData) {
+        List<List<String>> datas = new ArrayList<>();
+        List<String> list = null;
+        for (String str:errorData) {
+            list = new ArrayList<>();
+            for (String s:str.split("!@#")) {
+                list.add(s);
+            }
+            datas.add(list);
+        }
+        return datas;
     }
 
     /**
@@ -288,8 +300,22 @@ public class ManageServiceImpl implements ManageService {
         insertDTO.setMsg("ok");
         String uuid = UUID.randomUUID().toString();
         insertDTO.setUuid(uuid);
-        redisTemplate.opsForValue().set(uuid, insertDTO, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(uuid, getErrorData(insertDTO.getDataList()), 30, TimeUnit.MINUTES);
         return insertDTO;
+    }
+
+    private List<String> getErrorData(List<List<String>> dataList) {
+        List<String> errorList = new ArrayList<>();
+
+        StringBuffer dataStr = null;
+        for (List<String> datas:dataList) {
+            dataStr = new StringBuffer(datas.get(0));
+            for (int i=1; i<datas.size(); i++) {
+                dataStr.append("!@#"+datas.get(i));
+            }
+            errorList.add(dataStr.toString());
+        }
+        return errorList;
     }
 
     /**
