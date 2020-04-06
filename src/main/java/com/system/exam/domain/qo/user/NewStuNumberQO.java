@@ -22,6 +22,12 @@ public class NewStuNumberQO {
     private String collegeCode;
 
     /**
+     * 学院名称
+     */
+    @NotBlank(message = "学院名称不能为空")
+    private String collegeName;
+
+    /**
      * 男生人数
      */
     @NotBlank(message = "男生人数不能为空")

@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -230,10 +227,14 @@ public class ManageServiceImpl implements ManageService {
     public String newStuNumber(List<NewStuNumberQO> list) {
         int num = 1;
         String year = manageMapper.newGrade();
-        List<String> dataList = new ArrayList<>();
+        List<String> uuidList = new ArrayList<>();
+        String uuid = null;
+        List<String> dataList = null;
 
         StringBuffer dat = null;
+        Map<String,Object> map = null;
         for (NewStuNumberQO dto:list) {
+            dataList = new ArrayList<>();
             int boy = Integer.parseInt(dto.getBoy());
             int girl = Integer.parseInt(dto.getGirl());
             for (int i=0; i<boy; i++) {
@@ -250,9 +251,16 @@ public class ManageServiceImpl implements ManageService {
                 dataList.add(dat.toString());
                 num++;
             }
+            map = new HashMap<>();
+            map.put("name",dto.getCollegeName());
+            map.put("data",dataList);
+            uuid = UUID.randomUUID().toString();
+            redisTemplate.opsForValue().set(uuid,map,2,TimeUnit.MINUTES);
+            uuidList.add(uuid);
         }
-        String uuid = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set(uuid,dataList,2,TimeUnit.MINUTES);
+
+        uuid = UUID.randomUUID().toString();
+        redisTemplate.opsForValue().set(uuid,uuidList,2,TimeUnit.MINUTES);
         return uuid;
     }
 
@@ -263,6 +271,8 @@ public class ManageServiceImpl implements ManageService {
      */
     @Override
     public void newStuNum(HttpServletResponse response,String uuid) {
+        List<String> uuidList = (List<String>) redisTemplate.opsForValue().get(uuid);
+
         List<String> listTitle = new ArrayList<>();
         listTitle.add("学号");
         listTitle.add("姓名");
@@ -272,24 +282,43 @@ public class ManageServiceImpl implements ManageService {
         listTitle.add("学院代码");
         listTitle.add("班级号");
 
-        List<List<String>> datas = new ArrayList<>();
-        List<String> list = (List<String>) redisTemplate.opsForValue().get(uuid);
-
-        String[] arr = null;
+        List<Map<String,Object>> datas = new ArrayList<>();
+        Map<String,Object> map = null;
+        List<String> list = null;
         List<String> dataList = null;
-        for (String dat:list) {
-            arr = dat.split("!@#");
-            dataList = new ArrayList<>();
-            dataList.add(arr[1]);
-            dataList.add("");
-            dataList.add(arr[2]);
-            dataList.add("");
-            dataList.add("");
-            dataList.add(arr[0]);
-            dataList.add("");
-            datas.add(dataList);
+        String[] arr = null;
+        List<List<String>> mapData = null;
+        for (String key:uuidList) {
+            map = (Map<String, Object>) redisTemplate.opsForValue().get(key);
+            list = (List<String>) map.get("data");
+            mapData = new ArrayList<>();
+            for (String dat:list) {
+                arr = dat.split("!@#");
+                dataList = new ArrayList<>();
+                dataList.add(arr[1]);
+                dataList.add("");
+                dataList.add(arr[2]);
+                dataList.add("");
+                dataList.add("");
+                dataList.add(arr[0]);
+                dataList.add("");
+                mapData.add(dataList);
+            }
+            map.put("dataList",mapData);
+            datas.add(map);
         }
-        exportExcel(response,"新一届学生学号",listTitle,datas);
+
+        try {
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode("新一届学生"+".xlsx", "utf-8"));
+            OutputStream outputStream = response.getOutputStream();
+            XSSFWorkbook workbook = ExcelUtil.exportExcel(listTitle,datas);
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<List<String>> getErrorDataList(List<String> errorData) {
@@ -377,6 +406,10 @@ public class ManageServiceImpl implements ManageService {
             insertQO.setDataList(dataList);
             if ("clazz".equals(insertQO.getType())) {
                 dataMsg = checkData(listCollege, dataList.get(0), "学院代码错误 ");
+                if ("".equals(dataList.get(0)) || "".equals(dataList.get(1))
+                        || "".equals(dataList.get(2)) || "".equals(dataList.get(3))) {
+                    dataMsg += "所有不能为空";
+                }
                 if (dataList.get(1).length()!=4 || !isNumeric(dataList.get(1))) {
                     dataMsg += "年级不是四位整数 ";
                 }
@@ -389,10 +422,21 @@ public class ManageServiceImpl implements ManageService {
                 }
             } else {
                 dataMsg = checkData(listCollege, dataList.get(5), "学院代码错误 ");
+                if ("student".equals(insertQO.getType())
+                        && ("".equals(dataList.get(0)) || "".equals(dataList.get(1))
+                        || "".equals(dataList.get(2)) || "".equals(dataList.get(5))
+                        || "".equals(dataList.get(6)))) {
+                    dataMsg += "除电话邮箱外其余不能为空";
+                }
+                if ("teacher".equals(insertQO.getType())
+                        && ("".equals(dataList.get(0)) || "".equals(dataList.get(1))
+                        || "".equals(dataList.get(2)) || "".equals(dataList.get(5)))) {
+                    dataMsg += "除电话邮箱外其余不能为空";
+                }
                 if ("student".equals(insertQO.getType())) {
                     dataMsg += checkData(listClazz, dataList.get(6), "班级错误 ");
                 }
-                if (!"男".equals(list.get(i).get(2)) && !"女".equals(dataList.get(2))) {
+                if (!"M".equals(list.get(i).get(2)) && !"G".equals(dataList.get(2))) {
                     dataMsg += "性别错误 ";
                 }
                 if (manageMapper.isNumber(new IsNumberQO(insertQO.getType(), dataList.get(0))) != 0) {

@@ -26,8 +26,29 @@ public class ExcelUtil {
         cells.put("clazz",4);
     }
 
+    public static XSSFWorkbook exportExcel(List<String> listTitle, List<Map<String,Object>> datas) throws Exception {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        for (Map<String,Object> map:datas) {
+            createSheel(workbook,(String)map.get("name"),listTitle, (List<List<String>>) map.get("dataList"));
+        }
+        FileOutputStream fos = new FileOutputStream("新一届学生.xlsx");
+        workbook.write(fos);
+        fos.flush();
+        fos.close();
+        return workbook;
+    }
+
     public static XSSFWorkbook exportExcel(String workbookName, List<String> listTitle, List<List<String>> datas) throws Exception {
         XSSFWorkbook workbook = new XSSFWorkbook();
+        createSheel(workbook,workbookName,listTitle,datas);
+        FileOutputStream fos = new FileOutputStream(workbookName+".xlsx");
+        workbook.write(fos);
+        fos.flush();
+        fos.close();
+        return workbook;
+    }
+
+    private static void createSheel(XSSFWorkbook workbook,String workbookName, List<String> listTitle, List<List<String>> datas) {
         XSSFSheet sheet = workbook.createSheet(workbookName);
         XSSFRow row = null;
         XSSFCell cell = null;
@@ -61,11 +82,6 @@ public class ExcelUtil {
                 cell.setCellValue(cellData.get(j));
             }
         }
-        FileOutputStream fos = new FileOutputStream(workbookName+".xlsx");
-        workbook.write(fos);
-        fos.flush();
-        fos.close();
-        return workbook;
     }
 
     public static void getExamByExcel(InputStream in,String fileName,ImportExamDTO importExamDTO, ImportExamQO importExamQO) throws Exception {
