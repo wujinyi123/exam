@@ -5,34 +5,34 @@
     <!--查询考试码-->
     <select id="getExamByCode" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
         SELECT
-        tab.examCode examCode,
-        tab.examName examName,
-        tab.score score,
-        tab.teacherName teacherName,
-        tab.time time,
-        tab.pdDate pdDate,
-        tab.expDate expDate,
-        if(tab.remark='0' and tab.exp &lt; SYSDATE(),'2',tab.remark) remark,
-        if(tab.remark='1',
-            (select score from answer
-            where exam_code=tab.examCode and student_number=#{number})
-            ,'') myScore
+            tab.examCode examCode,
+            tab.examName examName,
+            tab.score score,
+            tab.teacherName teacherName,
+            tab.time time,
+            tab.pdDate pdDate,
+            tab.expDate expDate,
+            if(tab.remark='0' and tab.exp &lt; SYSDATE(),'2',tab.remark) remark,
+            if(tab.remark='1',
+                (select score from answer
+                where exam_code=tab.examCode and student_number=#{number})
+                ,'') myScore
         FROM
         (SELECT
-        t.exam_code examCode,
-        t.exam_name examName,
-        t.score score,
-        (select
-        concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
-        from teacher te
-        where te.number=t.teacher_number) teacherName,
-        concat(t.time,'分钟') time,
-        date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
-        date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
-        t.exp_time exp,
-        (select count(1) from answer
-        where state='1' and exam_code=t.exam_code and student_number=#{number}) remark
-        FROM exam t where t.exam_code=#{examCode}) tab
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            (select
+            concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
+            from teacher te
+            where te.number=t.teacher_number) teacherName,
+            concat(t.time,'分钟') time,
+            date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+            date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
+            t.exp_time exp,
+            (select count(1) from answer
+            where state='1' and exam_code=t.exam_code and student_number=#{number}) remark
+            FROM exam t where t.exam_code=#{examCode}) tab
     </select>
 
     <!--获取未参加且未超过截止时间的考试（学生）-->
@@ -153,8 +153,8 @@
 
     <!--上传考试结果-->
     <insert id="submitAnswer" parameterType="com.system.exam.domain.qo.exam.AnswerQO">
-        insert into answer(exam_code,student_number,single_answer,multiple_answer,score,use_time,submit_time,state)
-        values (#{examCode},#{stuNumber},#{singleAnswer},#{multipleAnswer},#{score},#{useTime},#{submitTime},'1')
+        insert into answer(uuid,exam_code,student_number,single_answer,multiple_answer,score,use_time,submit_time,state)
+        values (uuid(),#{examCode},#{stuNumber},#{singleAnswer},#{multipleAnswer},#{score},#{useTime},#{submitTime},'1')
     </insert>
 
     <!--是否已参加考试-->
@@ -202,8 +202,8 @@
     </select>
 
     <insert id="examNotice" parameterType="com.system.exam.domain.qo.exam.ExamNoticeQO">
-        insert into exam_message(exam_code,clazz_number,state)
-        values (#{examCode},#{clazzNumber},'1');
+        insert into exam_message(uuid,exam_code,clazz_number,state)
+        values (uuid(),#{examCode},#{clazzNumber},'1');
     </insert>
 
     <select id="getExamInfo" parameterType="string" resultType="com.system.exam.domain.dto.exam.ExamInfoDTO">
@@ -282,7 +282,7 @@
         left join exam t on ans.exam_code=t.exam_code
         WHERE ans.state='1' and stu.state='1' and cl.state='1'
         and co.state='1' and t.state='1' and ans.exam_code=#{examCode}
-        ORDER BY co.id,cl.number,stu.number
+        ORDER BY co.code,cl.number,stu.number
     </select>
 
     <select id="clazzGrade" parameterType="com.system.exam.domain.qo.exam.ClazzGradeQO" resultType="com.system.exam.domain.dto.exam.ClazzGradeDTO">
@@ -333,13 +333,13 @@
     </select>
 
     <insert id="insertExam" parameterType="com.system.exam.domain.qo.exam.NewBuiltExamQO">
-        insert into exam(exam_code,exam_name,score,teacher_number,time,pd_time,exp_time,state)
-        values (#{examCode},#{examName},#{score},#{teacherNumber},#{time},SYSDATE(),#{expTime},'1')
+        insert into exam(uuid,exam_code,exam_name,score,teacher_number,time,pd_time,exp_time,state)
+        values (uuid(),#{examCode},#{examName},#{score},#{teacherNumber},#{time},SYSDATE(),#{expTime},'1')
     </insert>
 
     <insert id="insertQuestion" parameterType="com.system.exam.domain.qo.exam.NewBuiltQuestionQO">
-        insert into question(exam_code,type,score,question,option_a,option_b,option_c,option_d,answer,answer_analysis,img_question,img_a,img_b,img_c,img_d,img_analysis,state)
-        values (#{examCode},#{type},#{score},#{question},#{optionA},#{optionB},#{optionC},#{optionD},#{answer},#{analysis},#{imgQuestion},#{imgA},#{imgB},#{imgC},#{imgD},#{imgAnalysis},'1')
+        insert into question(uuid,id,exam_code,type,score,question,option_a,option_b,option_c,option_d,answer,answer_analysis,img_question,img_a,img_b,img_c,img_d,img_analysis,state)
+        values (uuid(),#{id},#{examCode},#{type},#{score},#{question},#{optionA},#{optionB},#{optionC},#{optionD},#{answer},#{analysis},#{imgQuestion},#{imgA},#{imgB},#{imgC},#{imgD},#{imgAnalysis},'1')
     </insert>
 
     <delete id="deleteNewExam" parameterType="string">

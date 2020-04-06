@@ -14,6 +14,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NewBuiltQuestionQO {
     /**
+     * 题号
+     */
+    private String id;
+
+    /**
      * 考试码
      */
     private String examCode;

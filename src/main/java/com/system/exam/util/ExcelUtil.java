@@ -1,5 +1,8 @@
 package com.system.exam.util;
 
+import com.system.exam.domain.dto.exam.ImportExamDTO;
+import com.system.exam.domain.dto.exam.ImportQuestionDTO;
+import com.system.exam.domain.qo.exam.ImportExamQO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -63,6 +66,96 @@ public class ExcelUtil {
         fos.flush();
         fos.close();
         return workbook;
+    }
+
+    public static void getExamByExcel(InputStream in,String fileName,ImportExamDTO importExamDTO, ImportExamQO importExamQO) throws Exception {
+        //创建Excel工作薄
+        Workbook work = getWorkbook(in, fileName);
+        if (null == work) {
+            throw new Exception("创建Excel工作薄为空！");
+        }
+        importExamDTO.setSingleList(getExam(work.getSheetAt(0),Integer.parseInt(importExamQO.getSingles())));
+        importExamDTO.setMultipleList(getExam(work.getSheetAt(1),Integer.parseInt(importExamQO.getMultiples())));
+        work.close();
+    }
+
+    private static List<ImportQuestionDTO> getExam(Sheet sheet,int num) throws Exception {
+        List<ImportQuestionDTO> list = new ArrayList<>();
+        Row row = null;
+        Cell cell = null;
+        String str = null;
+        ImportQuestionDTO dto = null;
+
+        for (int i=0; i<num; i++) {
+            dto = new ImportQuestionDTO();
+
+            row = sheet.getRow(i*7+1);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setQuestion(str);
+
+            row = sheet.getRow(i*7+2);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setOptionA(str);
+
+            row = sheet.getRow(i*7+3);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setOptionB(str);
+
+            row = sheet.getRow(i*7+4);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setOptionC(str);
+
+            row = sheet.getRow(i*7+5);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setOptionD(str);
+
+            row = sheet.getRow(i*7+6);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setAnswer(str);
+
+            row = sheet.getRow(i*7+7);
+            cell = row.getCell(1);
+            if (cell==null) str = "";
+            else {
+                cell.setCellType(CellType.STRING);
+                str = cell.toString();
+            }
+            dto.setAnalysis(str);
+
+            list.add(dto);
+        }
+
+        return list;
     }
 
     /**

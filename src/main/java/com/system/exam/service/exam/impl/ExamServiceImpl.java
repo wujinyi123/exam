@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.*;
@@ -416,4 +417,33 @@ public class ExamServiceImpl implements ExamService {
         return examMapper.newStuScore(teacherNumber);
     }
 
+    /**
+     * 导入选择题
+     * @param file
+     * @param importExamQO
+     * @return
+     */
+    @Override
+    public ImportExamDTO importExam(MultipartFile file, ImportExamQO importExamQO) {
+        ImportExamDTO importExamDTO = new ImportExamDTO();
+
+        //判断是否上传了文件
+        if (file.isEmpty()) {
+            importExamDTO.setMsg("请上传文件");
+            return importExamDTO;
+        }
+
+        //读取文件内容
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+            ExcelUtil.getExamByExcel(inputStream,file.getOriginalFilename(),importExamDTO,importExamQO);
+            inputStream.close();
+        } catch (Exception e) {
+            importExamDTO.setMsg("文件获取失败："+e);
+            return importExamDTO;
+        }
+
+        return importExamDTO;
+    }
 }

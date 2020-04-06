@@ -1,6 +1,5 @@
 package com.system.exam.domain.qo.user;
 
-import com.system.exam.common.PageQO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,13 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 分页查询教师/学生QO
+ * 新一届学生学号QO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageUserQO extends PageQO {
+public class NewStuNumberQO {
     /**
      * 学院代码
      */
@@ -23,23 +22,14 @@ public class PageUserQO extends PageQO {
     private String collegeCode;
 
     /**
-     * 年级
+     * 男生人数
      */
-    private String year;
+    @NotBlank(message = "男生人数不能为空")
+    private String boy;
 
     /**
-     * 班级
+     * 女生人数
      */
-    private String clazz;
-
-    /**
-     * 性别
-     */
-    @NotBlank(message = "性别不能为空")
-    private String sex;
-
-    /**
-     * 模糊条件
-     */
-    private String term;
+    @NotBlank(message = "女生人数不能为空")
+    private String girl;
 }

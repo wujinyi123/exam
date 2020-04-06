@@ -1,13 +1,10 @@
 package com.system.exam.controller.user;
 
+import com.system.exam.common.PageQO;
 import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
-import com.system.exam.domain.dto.user.InsertDTO;
-import com.system.exam.domain.dto.user.PageStudentDTO;
-import com.system.exam.domain.dto.user.PageTeacherDTO;
-import com.system.exam.domain.qo.user.InsertErrorQO;
-import com.system.exam.domain.qo.user.InsertQO;
-import com.system.exam.domain.qo.user.PageUserQO;
+import com.system.exam.domain.dto.user.*;
+import com.system.exam.domain.qo.user.*;
 import com.system.exam.service.user.ManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +25,35 @@ import java.util.List;
 public class ManageController {
     @Autowired
     private ManageService manageService;
+
+    /**
+     * 全校情况
+     * @return
+     */
+    @PostMapping("/getSchoolInfo")
+    public ResponseData<SchoolInfoDTO> getSchoolInfo() {
+        return ResponseDataUtil.buildSuccess(manageService.getSchoolInfo());
+    }
+
+    /**
+     * 分页学院
+     * @param pageQO
+     * @return
+     */
+    @GetMapping("/pageCollege")
+    public ResponseData<List<PageCollegeDTO>> pageCollege(PageQO pageQO) {
+        return ResponseDataUtil.buildSuccess(manageService.pageCollege(), pageQO);
+    }
+
+    /**
+     * 分页查询班级
+     * @param pageClazzQO
+     * @return
+     */
+    @GetMapping("/pageClazz")
+    public ResponseData<List<PageClazzDTO>> pageClazz(@Valid PageClazzQO pageClazzQO) {
+        return ResponseDataUtil.buildSuccess(manageService.pageClazz(pageClazzQO), pageClazzQO);
+    }
 
     /**
      * 分页查询教师
@@ -87,5 +113,34 @@ public class ManageController {
     @PostMapping("/insert")
     public ResponseData<InsertDTO> insert(@RequestParam("file") MultipartFile file, InsertQO insertQO) {
         return ResponseDataUtil.buildSuccess(manageService.insert(file,insertQO));
+    }
+
+    /**
+     * 新一届班级
+     * @param response
+     */
+    @GetMapping("/newClazz")
+    public void newClazz(HttpServletResponse response) {
+        manageService.newClazz(response);
+    }
+
+    /**
+     * 新一届学生学号
+     * @param list
+     * @return
+     */
+    @PostMapping("/newStuNumber")
+    public ResponseData<String> newStuNumber(@RequestBody @Valid List<NewStuNumberQO> list) {
+        return ResponseDataUtil.buildSuccess(manageService.newStuNumber(list));
+    }
+
+    /**
+     * 新一届学生学号
+     * @param response
+     * @param uuid
+     */
+    @GetMapping("/newStuNum")
+    public void newStuNum(HttpServletResponse response,String uuid) {
+        manageService.newStuNum(response,uuid);
     }
 }

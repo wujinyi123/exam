@@ -1,5 +1,6 @@
 package com.system.exam.service.exam;
 
+import com.system.exam.common.ResultEnums;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.exam.*;
 import com.system.exam.domain.qo.exam.*;
@@ -151,4 +152,12 @@ public interface ExamService {
      * @return
      */
     List<NewStuScoreDTO> newStuScore(String teacherNumber);
+
+    /**
+     * 导入选择题
+     * @param file
+     * @param importExamQO
+     * @return
+     */
+    ImportExamDTO importExam(MultipartFile file,ImportExamQO importExamQO);
 }

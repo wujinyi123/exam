@@ -2,12 +2,62 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.exam.mapper.user.ManageMapper">
+    <!--全校情况-->
+    <select id="getSchoolInfo" resultType="com.system.exam.domain.dto.user.SchoolInfoDTO">
+        select
+            (select count(1) from college where state='1') colleges,
+            (select count(1) from clazz where state='1') clazzs,
+            (select count(1) from student where state='1' and sex='M') mstudents,
+            (select count(1) from student where state='1' and sex='G') gstudents,
+            (select count(1) from teacher where state='1' and sex='M') mteachers,
+            (select count(1) from teacher where state='1' and sex='G') gteachers
+        from dual
+    </select>
+
+    <!--分页学院-->
+    <select id="pageCollege" resultType="com.system.exam.domain.dto.user.PageCollegeDTO">
+        select
+            c.code code,
+            c.name name,
+            (select count(1) from clazz cl where cl.state='1' and cl.college_code=c.code) clazzs,
+            (select count(1) from student stu
+                left join clazz cl on stu.clazz_number=cl.number
+                where stu.state='1' and cl.state='1' and stu.sex='M' and cl.college_code=c.code) mstudents,
+            (select count(1) from student stu
+                left join clazz cl on stu.clazz_number=cl.number
+                where stu.state='1' and cl.state='1' and stu.sex='G' and cl.college_code=c.code) gstudents,
+            (select count(1) from teacher t where t.state='1' and t.sex='M' and t.college_code=c.code) mteachers,
+            (select count(1) from teacher t where t.state='1' and t.sex='G' and t.college_code=c.code) gteachers
+        from college c
+        where c.state='1'
+        order by c.code
+    </select>
+
+    <!--分页查询班级-->
+    <select id="pageClazz" parameterType="com.system.exam.domain.qo.user.PageClazzQO" resultType="com.system.exam.domain.dto.user.PageClazzDTO">
+        select
+            co.name college,
+            cl.number clazz,
+            cl.name major,
+            concat(cl.grade_year,'级') year
+        from clazz cl
+        left join college co on cl.college_code=co.code
+        where cl.state='1' and co.state='1'
+        <if test="collegeCode!=null and collegeCode!='0'.toString()">
+            and co.code=#{collegeCode}
+        </if>
+        <if test="year!=null and year!='0'.toString()">
+            and cl.grade_year=#{year}
+        </if>
+        order by cl.number
+    </select>
+
     <!--分页查询教师-->
     <select id="pageTeacher" parameterType="com.system.exam.domain.qo.user.PageUserQO" resultType="com.system.exam.domain.dto.user.PageTeacherDTO">
         select
             t.number number,
             t.name name,
-            t.sex sex,
+            if(t.sex='M','男','女') sex,
             c.name college,
             c.code collegeCode,
             t.tel tel,
@@ -15,23 +65,24 @@
         from teacher t
         left join college c on t.college_code=c.code
         where t.state='1' and c.state='1'
+        <if test="collegeCode!=null and collegeCode!='0'.toString()">
+            and c.code=#{collegeCode}
+        </if>
         <if test="sex!=null and sex!='0'.toString()">
             and t.sex=#{sex}
         </if>
         <if test="term!=null and term!=''">
-            and (c.name like concat('%',#{term},'%')
-            or c.code like concat('%',#{term},'%')
-            or t.number like concat('%',#{term},'%')
-            or t.name like concat('%',#{term},'%'))
+            and (t.number like concat('%',#{term},'%') or t.name like concat('%',#{term},'%'))
         </if>
         order by number
     </select>
+
     <!--分页查询学生-->
     <select id="pageStudent" parameterType="com.system.exam.domain.qo.user.PageUserQO" resultType="com.system.exam.domain.dto.user.PageStudentDTO">
         select
         t.number number,
         t.name name,
-        t.sex sex,
+        if(t.sex='M','男','女') sex,
         c.name college,
         c.code collegeCode,
         cl.number clazz,
@@ -42,16 +93,20 @@
         left join clazz cl on t.clazz_number=cl.number
         left join college c on cl.college_code=c.code
         where t.state='1' and c.state='1' and cl.state='1'
+        <if test="collegeCode!=null and collegeCode!='0'.toString()">
+            and c.code=#{collegeCode}
+        </if>
+        <if test="year!=null and year!='0'.toString()">
+            and cl.grade_year=#{year}
+        </if>
+        <if test="clazz!=null and clazz!='0'.toString()">
+            and cl.number=#{clazz}
+        </if>
         <if test="sex!=null and sex!='0'.toString()">
             and t.sex=#{sex}
         </if>
         <if test="term!=null and term!=''">
-            and (c.name like concat('%',#{term},'%')
-            or c.code like concat('%',#{term},'%')
-            or t.number like concat('%',#{term},'%')
-            or t.name like concat('%',#{term},'%')
-            or cl.number like concat('%',#{term},'%')
-            or cl.name like concat('%',#{term},'%'))
+            and (t.number like concat('%',#{term},'%') or t.name like concat('%',#{term},'%'))
         </if>
         order by number
     </select>
@@ -66,6 +121,7 @@
             name name
         FROM college
         WHERE state='1'
+        order by code
     </select>
     <!--所有班级-->
     <select id="listClazz" resultType="com.system.exam.domain.dto.common.MbDTO">
@@ -74,6 +130,7 @@
             name name
         FROM clazz
         WHERE state='1'
+        order by code
     </select>
     <!--查询账户是否存在-->
     <select id="isNumber" parameterType="com.system.exam.domain.qo.user.IsNumberQO" resultType="int">
@@ -88,4 +145,20 @@
         WHERE state='1' and number=#{number}
     </select>
 
+    <select id="newClazz" resultType="com.system.exam.domain.dto.user.NewClazzDTO">
+        select
+            college_code collegeCode,
+            grade_year+1 year,
+            concat(college_code,grade_year+1,substring(number,7,2)) clazz,
+            name major
+        from clazz
+        where state='1'
+        and grade_year=(select max(grade_year) from clazz where state='1')
+        order by college_code,number
+    </select>
+
+    <select id="newGrade" resultType="string">
+        select max(year)+1 from
+        (select substring(number,1,4) year from student where state='1') tab
+    </select>
 </mapper>

@@ -6,7 +6,7 @@
     <select id="login" parameterType="com.system.exam.domain.qo.user.LoginQO"
             resultType="com.system.exam.domain.dto.user.UserDTO">
         SELECT
-            id,number,password,name,sex,tel,email,img_path,state
+            number,password,name,sex,tel,email,img_path,state
         FROM
         <choose>
             <when test="userType=='admin'.toString()">admin</when>
@@ -21,7 +21,7 @@
         SELECT
             t.number number,
             t.name name,
-            t.sex sex,
+            if(t.sex='M','男','女') sex,
             t.tel tel,
             t.email email,
             t.img_path img
@@ -35,7 +35,7 @@
             c.name college,
             t.number number,
             t.name name,
-            t.sex sex,
+            if(t.sex='M','男','女') sex,
             t.tel tel,
             t.email email,
             t.img_path img
@@ -51,7 +51,7 @@
             stu.clazz_number clazz,
             stu.number number,
             stu.name name,
-            stu.sex sex,
+            if(stu.sex='M','男','女') sex,
             stu.tel tel,
             stu.email email,
             stu.img_path img

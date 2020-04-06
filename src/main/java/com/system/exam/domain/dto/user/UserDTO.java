@@ -16,11 +16,6 @@ import java.io.Serializable;
 @Builder
 public class UserDTO implements Serializable {
     /**
-     * 用户id
-     */
-    private String id;
-
-    /**
      * 用户账号
      */
     private String number;

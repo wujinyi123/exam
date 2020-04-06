@@ -222,4 +222,14 @@ public class ExamController {
         return ResponseDataUtil.buildSuccess(examService.newStuScore(teacherNumber));
     }
 
+    /**
+     * 导入选择题
+     * @param file
+     * @param importExamQO
+     * @return
+     */
+    @PostMapping("/importExam")
+    public ResponseData<ImportExamDTO> importExam(@RequestParam("file") MultipartFile file,@Valid ImportExamQO importExamQO) {
+        return ResponseDataUtil.buildSuccess(examService.importExam(file,importExamQO));
+    }
 }

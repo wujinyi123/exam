@@ -1,13 +1,10 @@
 package com.system.exam.service.user.impl;
 
+import com.system.exam.common.PageQO;
 import com.system.exam.domain.dto.common.MbDTO;
-import com.system.exam.domain.dto.user.InsertDTO;
-import com.system.exam.domain.dto.user.PageStudentDTO;
-import com.system.exam.domain.dto.user.PageTeacherDTO;
-import com.system.exam.domain.qo.user.InsertErrorQO;
-import com.system.exam.domain.qo.user.InsertQO;
-import com.system.exam.domain.qo.user.IsNumberQO;
-import com.system.exam.domain.qo.user.PageUserQO;
+import com.system.exam.domain.dto.exam.NewStuScoreDTO;
+import com.system.exam.domain.dto.user.*;
+import com.system.exam.domain.qo.user.*;
 import com.system.exam.mapper.user.ManageMapper;
 import com.system.exam.service.user.ManageService;
 import com.system.exam.util.ExcelUtil;
@@ -37,6 +34,34 @@ public class ManageServiceImpl implements ManageService {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    /**
+     * 全校情况
+     * @return
+     */
+    @Override
+    public SchoolInfoDTO getSchoolInfo() {
+        return manageMapper.getSchoolInfo();
+    }
+
+    /**
+     * 分页学院
+     * @return
+     */
+    @Override
+    public List<PageCollegeDTO> pageCollege() {
+        return manageMapper.pageCollege();
+    }
+
+    /**
+     * 分页查询班级
+     * @param pageClazzQO
+     * @return
+     */
+    @Override
+    public List<PageClazzDTO> pageClazz(PageClazzQO pageClazzQO) {
+        return manageMapper.pageClazz(pageClazzQO);
+    }
 
     /**
      * 分页查询教师
@@ -169,6 +194,104 @@ public class ManageServiceImpl implements ManageService {
         exportExcel(response,fileName,listTitle,insertErrorQO.getDataList());
     }
 
+    /**
+     * 新一届班级
+     * @param response
+     */
+    @Override
+    public void newClazz(HttpServletResponse response) {
+        List<String> listTitle = new ArrayList<>();
+        listTitle.add("学院代码");
+        listTitle.add("年级（四位整数）");
+        listTitle.add("班级号（学院代码+年级+XX）");
+        listTitle.add("专业");
+
+        List<NewClazzDTO> newClazzList = manageMapper.newClazz();
+        List<List<String>> datas = new ArrayList<>();
+
+        List<String> list = null;
+        for (NewClazzDTO newClazz:newClazzList) {
+            list = new ArrayList<>();
+            list.add(newClazz.getCollegeCode());
+            list.add(newClazz.getYear());
+            list.add(newClazz.getClazz());
+            list.add(newClazz.getMajor());
+            datas.add(list);
+        }
+        exportExcel(response,"新一届班级",listTitle,datas);
+    }
+
+    /**
+     * 新一届学生学号
+     * @param list
+     * @return
+     */
+    @Override
+    public String newStuNumber(List<NewStuNumberQO> list) {
+        int num = 1;
+        String year = manageMapper.newGrade();
+        List<String> dataList = new ArrayList<>();
+
+        StringBuffer dat = null;
+        for (NewStuNumberQO dto:list) {
+            int boy = Integer.parseInt(dto.getBoy());
+            int girl = Integer.parseInt(dto.getGirl());
+            for (int i=0; i<boy; i++) {
+                dat = new StringBuffer(dto.getCollegeCode());
+                dat.append("!@#"+year+"01"+String.format("%05d", num));
+                dat.append("!@#M");
+                dataList.add(dat.toString());
+                num++;
+            }
+            for (int i=0; i<girl; i++) {
+                dat = new StringBuffer(dto.getCollegeCode());
+                dat.append("!@#"+year+"02"+String.format("%05d", num));
+                dat.append("!@#G");
+                dataList.add(dat.toString());
+                num++;
+            }
+        }
+        String uuid = UUID.randomUUID().toString();
+        redisTemplate.opsForValue().set(uuid,dataList,2,TimeUnit.MINUTES);
+        return uuid;
+    }
+
+    /**
+     * 新一届学生学号
+     * @param response
+     * @param uuid
+     */
+    @Override
+    public void newStuNum(HttpServletResponse response,String uuid) {
+        List<String> listTitle = new ArrayList<>();
+        listTitle.add("学号");
+        listTitle.add("姓名");
+        listTitle.add("性别");
+        listTitle.add("电话");
+        listTitle.add("邮箱");
+        listTitle.add("学院代码");
+        listTitle.add("班级号");
+
+        List<List<String>> datas = new ArrayList<>();
+        List<String> list = (List<String>) redisTemplate.opsForValue().get(uuid);
+
+        String[] arr = null;
+        List<String> dataList = null;
+        for (String dat:list) {
+            arr = dat.split("!@#");
+            dataList = new ArrayList<>();
+            dataList.add(arr[1]);
+            dataList.add("");
+            dataList.add(arr[2]);
+            dataList.add("");
+            dataList.add("");
+            dataList.add(arr[0]);
+            dataList.add("");
+            datas.add(dataList);
+        }
+        exportExcel(response,"新一届学生学号",listTitle,datas);
+    }
+
     private List<List<String>> getErrorDataList(List<String> errorData) {
         List<List<String>> datas = new ArrayList<>();
         List<String> list = null;
@@ -257,7 +380,7 @@ public class ManageServiceImpl implements ManageService {
                 if (dataList.get(1).length()!=4 || !isNumeric(dataList.get(1))) {
                     dataMsg += "年级不是四位整数 ";
                 }
-                if ("".equals(dataMsg) && (dataList.get(2).length()!=dataList.get(0).length()+dataList.get(1).length()+2
+                if ((dataList.get(2).length()!=dataList.get(0).length()+dataList.get(1).length()+2
                     || !(dataList.get(0)+dataList.get(1)).equals(dataList.get(2).substring(0,dataList.get(2).length()-2)))) {
                     dataMsg += "班级号命名错误 ";
                 }

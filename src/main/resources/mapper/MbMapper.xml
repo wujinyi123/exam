@@ -17,6 +17,7 @@
             name name
         FROM college
         WHERE state='1'
+        order by code
     </select>
 
     <select id="listClazz" parameterType="string" resultType="com.system.exam.domain.dto.common.MbDTO">
@@ -25,6 +26,30 @@
             number name
         FROM clazz
         WHERE state='1' and college_code=#{code}
+        order by code
     </select>
 
+    <select id="listClazzByCY" parameterType="string" resultType="com.system.exam.domain.dto.common.MbDTO">
+        SELECT
+            number code,
+            number name
+        FROM clazz
+        WHERE state='1'
+        <if test="collegeCode!=null and collegeCode!='0'.toString()">
+            and college_code=#{collegeCode}
+        </if>
+        <if test="year!=null and year!='0'.toString()">
+            and grade_year=#{year}
+        </if>
+        order by code
+    </select>
+
+    <select id="listYear" resultType="com.system.exam.domain.dto.common.MbDTO">
+        select
+            DISTINCT grade_year code,
+            concat(grade_year,'级') name
+        from clazz
+        where state='1'
+        order by code
+    </select>
 </mapper>

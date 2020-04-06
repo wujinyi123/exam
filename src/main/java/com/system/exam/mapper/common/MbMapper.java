@@ -1,6 +1,7 @@
 package com.system.exam.mapper.common;
 
 import com.system.exam.domain.dto.common.MbDTO;
+import com.system.exam.domain.qo.common.ClazzQO;
 import com.system.exam.domain.qo.common.MbQO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -30,4 +31,12 @@ public interface MbMapper {
      * @return
      */
     List<MbDTO> listClazz(String code);
+
+    /**
+     * 所有年级
+     * @return
+     */
+    List<MbDTO> listYear();
+
+    List<MbDTO> listClazzByCY(ClazzQO clazzQO);
 }

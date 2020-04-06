@@ -1,10 +1,10 @@
 package com.system.exam.mapper.user;
 
 import com.system.exam.domain.dto.common.MbDTO;
-import com.system.exam.domain.dto.user.PageStudentDTO;
-import com.system.exam.domain.dto.user.PageTeacherDTO;
+import com.system.exam.domain.dto.user.*;
 import com.system.exam.domain.qo.user.InsertQO;
 import com.system.exam.domain.qo.user.IsNumberQO;
+import com.system.exam.domain.qo.user.PageClazzQO;
 import com.system.exam.domain.qo.user.PageUserQO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,6 +15,25 @@ import java.util.List;
  */
 @Mapper
 public interface ManageMapper {
+    /**
+     * 全校情况
+     * @return
+     */
+    SchoolInfoDTO getSchoolInfo();
+
+    /**
+     * 分页学院
+     * @return
+     */
+    List<PageCollegeDTO> pageCollege();
+
+    /**
+     * 分页查询班级
+     * @param pageClazzQO
+     * @return
+     */
+    List<PageClazzDTO> pageClazz(PageClazzQO pageClazzQO);
+
     /**
      * 分页查询教师
      * @param pageUserQO
@@ -54,4 +73,16 @@ public interface ManageMapper {
      * @return
      */
     int isNumber(IsNumberQO isNumberQO);
+
+    /**
+     * 新一届班级
+     * @return
+     */
+    List<NewClazzDTO> newClazz();
+
+    /**
+     * 新年级
+     * @return
+     */
+    String newGrade();
 }
