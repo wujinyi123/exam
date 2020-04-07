@@ -47,13 +47,6 @@ public interface ManageService {
     List<PageStudentDTO> pageStudent(PageUserQO pageUserQO);
 
     /**
-     * 下载模板
-     * @param response
-     * @param type
-     */
-    void downloadTemplate(HttpServletResponse response, String type);
-
-    /**
      * 导入信息
      * @param file
      * @param insertQO

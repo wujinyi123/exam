@@ -32,7 +32,7 @@
     <select id="listClazzByCY" parameterType="string" resultType="com.system.exam.domain.dto.common.MbDTO">
         SELECT
             number code,
-            number name
+            concat(number,',',name) name
         FROM clazz
         WHERE state='1'
         <if test="collegeCode!=null and collegeCode!='0'.toString()">

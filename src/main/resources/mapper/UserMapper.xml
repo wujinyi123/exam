@@ -21,6 +21,7 @@
         SELECT
             t.number number,
             t.name name,
+            t.sex sexCode,
             if(t.sex='M','男','女') sex,
             t.tel tel,
             t.email email,
@@ -32,9 +33,11 @@
     <!--获取教师个人资料-->
     <select id="getTeacherInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
+            c.code collegeCode,
             c.name college,
             t.number number,
             t.name name,
+            t.sex sexCode,
             if(t.sex='M','男','女') sex,
             t.tel tel,
             t.email email,
@@ -46,11 +49,14 @@
     <!--获取学生个人资料-->
     <select id="getStudentInfo" parameterType="com.system.exam.domain.qo.user.UserQO" resultType="com.system.exam.domain.dto.user.UserInfoDTO">
         SELECT
+            co.code collegeCode,
             co.name college,
+            cl.grade_year year,
             cl.name major,
             stu.clazz_number clazz,
             stu.number number,
             stu.name name,
+            stu.sex sexCode,
             if(stu.sex='M','男','女') sex,
             stu.tel tel,
             stu.email email,

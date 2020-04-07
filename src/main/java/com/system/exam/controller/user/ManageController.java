@@ -76,16 +76,6 @@ public class ManageController {
     }
 
     /**
-     * 下载模板
-     * @param response
-     * @param type
-     */
-    @GetMapping("/downloadTemplate")
-    public void downloadTemplate(HttpServletResponse response, @RequestParam @NotNull String type) {
-        manageService.downloadTemplate(response,type);
-    }
-
-    /**
      * 导出学院代码、班级号
      * @param response
      */

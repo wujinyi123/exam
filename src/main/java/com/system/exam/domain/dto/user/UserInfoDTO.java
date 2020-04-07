@@ -14,9 +14,19 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserInfoDTO {
     /**
+     * 学院代码
+     */
+    private String collegeCode;
+
+    /**
      * 学院
      */
     private String college;
+
+    /**
+     * 年级
+     */
+    private String year;
 
     /**
      * 专业
@@ -42,6 +52,11 @@ public class UserInfoDTO {
      * 性别
      */
     private String sex;
+
+    /**
+     * 性别代码：M/G
+     */
+    private String sexCode;
 
     /**
      * 手机号码

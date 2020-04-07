@@ -81,46 +81,6 @@ public class ManageServiceImpl implements ManageService {
     }
 
     /**
-     * 下载模板
-     * @param response
-     * @param type
-     */
-    @Override
-    public void downloadTemplate(HttpServletResponse response, String type) {
-        List<String> listTitle = new ArrayList<>();
-        switch (type){
-            case "clazz":{
-                listTitle.add("学院代码");
-                listTitle.add("年级（四位整数）");
-                listTitle.add("班级号（学院代码+年级+XX）");
-                listTitle.add("专业");
-                break;
-            }
-            case "student":{
-                listTitle.add("学号");
-                listTitle.add("姓名");
-                listTitle.add("性别");
-                listTitle.add("电话");
-                listTitle.add("邮箱");
-                listTitle.add("学院代码");
-                listTitle.add("班级号");
-                break;
-            }
-            case "teacher":{
-                listTitle.add("教师号");
-                listTitle.add("姓名");
-                listTitle.add("性别");
-                listTitle.add("电话");
-                listTitle.add("邮箱");
-                listTitle.add("学院代码");
-                break;
-            }
-            default:break;
-        }
-        exportExcel(response,type,listTitle,new ArrayList<>());
-    }
-
-    /**
      * 导出学院代码、班级号
      * @param response
      */
