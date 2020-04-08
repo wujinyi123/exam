@@ -21,4 +21,8 @@ public class NewExamQO extends PageQO {
      */
     private String number;
 
+    /**
+     * 模糊条件
+     */
+    private String term;
 }

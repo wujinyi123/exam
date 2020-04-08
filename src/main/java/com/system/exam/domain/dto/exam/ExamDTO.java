@@ -39,6 +39,11 @@ public class ExamDTO {
     private String score;
 
     /**
+     * 教师号
+     */
+    private String teacherNumber;
+
+    /**
      * 出题老师
      */
     private String teacherName;

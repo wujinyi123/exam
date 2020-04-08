@@ -41,15 +41,15 @@
             t.exam_code examCode,
             t.exam_name examName,
             t.score score,
-            (select
-                concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
-                from teacher te
-                where te.number=t.teacher_number) teacherName,
+            t.teacher_number teacherNumber,
+            concat(coll.name,',',teach.name) teacherName,
             concat(t.time,'分钟') time,
             date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
             date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate
         from exam_message em
         left join exam t on em.exam_code=t.exam_code
+        left join teacher teach on t.teacher_number=teach.number
+        left join college coll on teach.college_code=coll.code
         left join
             (select stu.clazz_number clazz_number,a.exam_code exam_code,'1' isFinish
             from answer a left join student stu on a.student_number=stu.number
@@ -57,6 +57,14 @@
             on em.clazz_number=ans.clazz_number and em.exam_code=ans.exam_code
         where t.state='1' and em.state='1' and ans.isFinish is null and t.exp_time>SYSDATE()
             and em.clazz_number=(select clazz_number from student where number=#{number})
+        <if test="term!=null and term!=''">
+            and (t.exam_code like concat('%',#{term},'%')
+            or t.exam_name like concat('%',#{term},'%')
+            or t.teacher_number like concat('%',#{term},'%')
+            or teach.name like concat('%',#{term},'%')
+            or teach.college_code like concat('%',#{term},'%')
+            or coll.name like concat('%',#{term},'%'))
+        </if>
         ORDER BY t.exp_time,t.exam_code
     </select>
 
@@ -83,6 +91,7 @@
             t.exam_code examCode,
             t.exam_name examName,
             t.score score,
+            te.number teacherNumber,
             concat(co.name,',',te.name,'老师') teacherName,
             ans.use_time time,
             ans.score myScore,
