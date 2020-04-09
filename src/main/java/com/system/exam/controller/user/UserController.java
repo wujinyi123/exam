@@ -4,10 +4,7 @@ import com.system.exam.common.ResponseData;
 import com.system.exam.common.ResponseDataUtil;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.user.*;
-import com.system.exam.domain.qo.user.LoginQO;
-import com.system.exam.domain.qo.user.UdateQO;
-import com.system.exam.domain.qo.user.UserMsgQO;
-import com.system.exam.domain.qo.user.UserQO;
+import com.system.exam.domain.qo.user.*;
 import com.system.exam.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -97,4 +94,23 @@ public class UserController {
         return ResponseDataUtil.buildSuccess(userService.imgUpload(file,type));
     }
 
+    /**
+     * 更新用户信息
+     * @param updateInfoQO
+     * @return
+     */
+    @PostMapping("/updateInfo")
+    public ResponseData<String> updateInfo(@RequestBody @Valid UpdateInfoQO updateInfoQO) {
+        return ResponseDataUtil.buildSuccess(userService.updateInfo(updateInfoQO));
+    }
+
+    /**
+     * 重置密码
+     * @param resetPasswordQO
+     * @return
+     */
+    @PostMapping("/resetPassword")
+    public ResponseData<String> resetPassword(@RequestBody @Valid ResetPasswordQO resetPasswordQO) {
+        return ResponseDataUtil.buildSuccess(userService.resetPassword(resetPasswordQO));
+    }
 }

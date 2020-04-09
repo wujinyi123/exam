@@ -319,7 +319,11 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public String deleteExam(String examCode) {
-        return examMapper.deleteExam(examCode)+"";
+        examMapper.deleteMessage(examCode);
+        examMapper.deleteAnswer(examCode);
+        examMapper.deleteQuestion(examCode);
+        String result = examMapper.deleteExam(examCode)+"";
+        return result;
     }
 
     /**

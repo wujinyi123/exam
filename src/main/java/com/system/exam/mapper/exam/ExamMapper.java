@@ -115,6 +115,9 @@ public interface ExamMapper {
      * @return
      */
     int deleteExam(String examCode);
+    int deleteMessage(String examCode);
+    int deleteAnswer(String examCode);
+    int deleteQuestion(String examCode);
 
     /**
      * 班级成绩

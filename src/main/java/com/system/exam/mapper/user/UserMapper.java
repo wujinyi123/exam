@@ -2,9 +2,7 @@ package com.system.exam.mapper.user;
 
 import com.system.exam.domain.dto.user.UserInfoDTO;
 import com.system.exam.domain.dto.user.UserDTO;
-import com.system.exam.domain.qo.user.LoginQO;
-import com.system.exam.domain.qo.user.UdateQO;
-import com.system.exam.domain.qo.user.UserQO;
+import com.system.exam.domain.qo.user.*;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -60,4 +58,20 @@ public interface UserMapper {
      * @return
      */
     int udateImg(UdateQO udateQO);
+
+    /**
+     * 更新用户信息
+     * @param updateInfoQO
+     * @return
+     */
+    int updateAdmin(UpdateInfoQO updateInfoQO);
+    int updateTeacher(UpdateInfoQO updateInfoQO);
+    int updateStudent(UpdateInfoQO updateInfoQO);
+
+    /**
+     * 重置密码
+     * @param resetPasswordQO
+     * @return
+     */
+    int resetPassword(ResetPasswordQO resetPasswordQO);
 }

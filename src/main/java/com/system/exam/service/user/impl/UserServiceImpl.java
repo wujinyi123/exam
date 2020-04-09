@@ -4,10 +4,7 @@ import com.system.exam.common.IUserSession;
 import com.system.exam.common.ImgOperate;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.user.*;
-import com.system.exam.domain.qo.user.LoginQO;
-import com.system.exam.domain.qo.user.UdateQO;
-import com.system.exam.domain.qo.user.UserMsgQO;
-import com.system.exam.domain.qo.user.UserQO;
+import com.system.exam.domain.qo.user.*;
 import com.system.exam.mapper.user.UserMapper;
 import com.system.exam.service.user.UserService;
 import com.system.exam.common.impl.ImgOperateImpl;
@@ -176,6 +173,42 @@ public class UserServiceImpl implements UserService {
             userMapper.udateImg(udateQO);
         }
         return imgUploadDTO;
+    }
+
+    /**
+     * 更新用户信息
+     * @param updateInfoQO
+     * @return
+     */
+    @Override
+    public String updateInfo(UpdateInfoQO updateInfoQO) {
+        String result = "";
+        switch (updateInfoQO.getUserType()) {
+            case "admin":{
+                result = userMapper.updateAdmin(updateInfoQO)+"";
+                break;
+            }
+            case "teacher":{
+                result = userMapper.updateTeacher(updateInfoQO)+"";
+                break;
+            }
+            case "student":{
+                result = userMapper.updateStudent(updateInfoQO)+"";
+                break;
+            }
+            default:result = "0";
+        }
+        return result;
+    }
+
+    /**
+     * 重置密码
+     * @param resetPasswordQO
+     * @return
+     */
+    @Override
+    public String resetPassword(ResetPasswordQO resetPasswordQO) {
+        return userMapper.resetPassword(resetPasswordQO)+"";
     }
 
 }

@@ -3,10 +3,7 @@ package com.system.exam.service.user;
 import com.system.exam.common.ResultEnums;
 import com.system.exam.domain.dto.common.ImgUploadDTO;
 import com.system.exam.domain.dto.user.*;
-import com.system.exam.domain.qo.user.LoginQO;
-import com.system.exam.domain.qo.user.UdateQO;
-import com.system.exam.domain.qo.user.UserMsgQO;
-import com.system.exam.domain.qo.user.UserQO;
+import com.system.exam.domain.qo.user.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -61,4 +58,18 @@ public interface UserService {
      * @return
      */
     ImgUploadDTO imgUpload(MultipartFile file, String type);
+
+    /**
+     * 更新用户信息
+     * @param updateInfoQO
+     * @return
+     */
+    String updateInfo(UpdateInfoQO updateInfoQO);
+
+    /**
+     * 重置密码
+     * @param resetPasswordQO
+     * @return
+     */
+    String resetPassword(ResetPasswordQO resetPasswordQO);
 }

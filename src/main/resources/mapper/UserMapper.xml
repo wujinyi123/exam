@@ -85,7 +85,7 @@
             <when test="userType=='teacher'.toString()">teacher</when>
             <otherwise>student</otherwise>
         </choose>
-        SET tel=#{tel},email=#{email} WHERE number=#{number}
+        SET tel=#{tel},email=#{email} WHERE number=#{number} and state='1'
     </update>
 
     <!--上传头像-->
@@ -96,6 +96,28 @@
             <when test="userType=='teacher'.toString()">teacher</when>
             <otherwise>student</otherwise>
         </choose>
-        SET img_path=#{img} WHERE number=#{number}
+        SET img_path=#{img} WHERE number=#{number} and state='1'
+    </update>
+
+    <update id="updateAdmin" parameterType="com.system.exam.domain.qo.user.UpdateInfoQO">
+        update admin set name=#{name},sex=#{sex},tel=#{tel},email=#{email}
+        where number=#{number} and state='1'
+    </update>
+    <update id="updateTeacher" parameterType="com.system.exam.domain.qo.user.UpdateInfoQO">
+        update teacher set name=#{name},sex=#{sex},tel=#{tel},email=#{email},college_code=#{collegeCode}
+        where number=#{number} and state='1'
+    </update>
+    <update id="updateStudent" parameterType="com.system.exam.domain.qo.user.UpdateInfoQO">
+        update student set name=#{name},sex=#{sex},tel=#{tel},email=#{email},clazz_number=#{clazz}
+        where number=#{number} and state='1'
+    </update>
+
+    <update id="resetPassword" parameterType="com.system.exam.domain.qo.user.ResetPasswordQO">
+        UPDATE
+        <choose>
+            <when test="userType=='teacher'.toString()">teacher</when>
+            <when test="userType=='student'.toString()">student</when>
+        </choose>
+        SET password=#{newPassword} WHERE number=#{number}
     </update>
 </mapper>

@@ -227,6 +227,15 @@
     <update id="deleteExam" parameterType="string">
         update exam set state='0' where exam_code=#{examCode} and state='1'
     </update>
+    <update id="deleteMessage" parameterType="string">
+        update exam_message set state='0' where exam_code=#{examCode} and state='1'
+    </update>
+    <update id="deleteAnswer" parameterType="string">
+        update answer set state='0' where exam_code=#{examCode} and state='1'
+    </update>
+    <update id="deleteQuestion" parameterType="string">
+        update question set state='0' where exam_code=#{examCode} and state='1'
+    </update>
 
     <select id="pageGrade" parameterType="com.system.exam.domain.qo.exam.PageGradeQO" resultType="com.system.exam.domain.dto.exam.PageGradeDTO">
         select
