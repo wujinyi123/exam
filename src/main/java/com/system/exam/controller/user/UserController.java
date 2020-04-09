@@ -113,4 +113,14 @@ public class UserController {
     public ResponseData<String> resetPassword(@RequestBody @Valid ResetPasswordQO resetPasswordQO) {
         return ResponseDataUtil.buildSuccess(userService.resetPassword(resetPasswordQO));
     }
+
+    /**
+     * 删除用户
+     * @param deleteUserQO
+     * @return
+     */
+    @PostMapping("/deleteUser")
+    public ResponseData<String> deleteUser(@RequestBody @Valid DeleteUserQO deleteUserQO) {
+        return ResponseDataUtil.buildSuccess(userService.deleteUser(deleteUserQO));
+    }
 }

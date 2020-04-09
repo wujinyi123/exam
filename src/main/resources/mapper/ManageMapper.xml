@@ -49,7 +49,7 @@
         <if test="year!=null and year!='0'.toString()">
             and cl.grade_year=#{year}
         </if>
-        order by cl.number
+        order by co.code,cl.number
     </select>
 
     <!--分页查询教师-->
@@ -74,7 +74,7 @@
         <if test="term!=null and term!=''">
             and (t.number like concat('%',#{term},'%') or t.name like concat('%',#{term},'%'))
         </if>
-        order by number
+        order by c.code,t.number
     </select>
 
     <!--分页查询学生-->
@@ -108,7 +108,7 @@
         <if test="term!=null and term!=''">
             and (t.number like concat('%',#{term},'%') or t.name like concat('%',#{term},'%'))
         </if>
-        order by number
+        order by c.code,cl.number,t.number
     </select>
     <!--导入信息-->
     <insert id="insertUser" parameterType="com.system.exam.domain.qo.user.InsertQO">

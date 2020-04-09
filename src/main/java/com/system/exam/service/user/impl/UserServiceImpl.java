@@ -211,4 +211,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.resetPassword(resetPasswordQO)+"";
     }
 
+    /**
+     * 删除用户
+     * @param deleteUserQO
+     * @return
+     */
+    @Override
+    public String deleteUser(DeleteUserQO deleteUserQO) {
+        return userMapper.deleteUser(deleteUserQO)+"";
+    }
+
 }

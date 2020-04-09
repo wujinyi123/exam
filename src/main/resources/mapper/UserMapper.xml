@@ -118,6 +118,15 @@
             <when test="userType=='teacher'.toString()">teacher</when>
             <when test="userType=='student'.toString()">student</when>
         </choose>
-        SET password=#{newPassword} WHERE number=#{number}
+        SET password=#{newPassword} WHERE number=#{number} and state='1'
+    </update>
+
+    <update id="deleteUser" parameterType="com.system.exam.domain.qo.user.DeleteUserQO">
+        UPDATE
+        <choose>
+            <when test="userType=='teacher'.toString()">teacher</when>
+            <when test="userType=='student'.toString()">student</when>
+        </choose>
+        SET state='0' WHERE number=#{number}
     </update>
 </mapper>

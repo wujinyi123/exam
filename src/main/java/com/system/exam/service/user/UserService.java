@@ -72,4 +72,11 @@ public interface UserService {
      * @return
      */
     String resetPassword(ResetPasswordQO resetPasswordQO);
+
+    /**
+     * 删除用户
+     * @param deleteUserQO
+     * @return
+     */
+    String deleteUser(DeleteUserQO deleteUserQO);
 }

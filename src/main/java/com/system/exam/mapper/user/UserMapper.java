@@ -74,4 +74,11 @@ public interface UserMapper {
      * @return
      */
     int resetPassword(ResetPasswordQO resetPasswordQO);
+
+    /**
+     * 删除用户
+     * @param deleteUserQO
+     * @return
+     */
+    int deleteUser(DeleteUserQO deleteUserQO);
 }
