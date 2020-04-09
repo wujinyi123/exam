@@ -407,13 +407,10 @@ public class ManageServiceImpl implements ManageService {
                 dataList.add(dataMsg);
                 insertDTO.getDataList().add(dataList);
             } else {
-                dataList.add("1");
-                //flag = manageMapper.insert(insertQO);
-                //flag = 1;
+                flag = manageMapper.insert(insertQO);
                 if (flag!=0) {
                     successSum++;
                 } else {
-                    dataList.remove(dataList.size()-1);
                     dataList.add("上传错误");
                     insertDTO.getDataList().add(dataList);
                 }
