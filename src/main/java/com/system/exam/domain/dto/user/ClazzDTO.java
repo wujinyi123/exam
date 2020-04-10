@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 新一届年级DTO
+ * 年级DTO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewClazzDTO {
+public class ClazzDTO {
     /**
      * 学院代码
      */

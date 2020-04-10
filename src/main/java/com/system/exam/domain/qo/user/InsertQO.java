@@ -23,5 +23,19 @@ public class InsertQO {
     /**
      * 数据组
      */
-    private List<String> dataList;
+    /*private List<String> dataList;*/
+
+    private String flag;
+
+    private String collegeCode;
+    private String year;
+    private String clazz;
+    private String major;
+
+    private String number;
+    private String password;
+    private String name;
+    private String sex;
+    private String tel;
+    private String email;
 }

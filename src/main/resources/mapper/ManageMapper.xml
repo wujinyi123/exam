@@ -111,8 +111,21 @@
         order by c.code,cl.number,t.number
     </select>
     <!--导入信息-->
-    <insert id="insertUser" parameterType="com.system.exam.domain.qo.user.InsertQO">
-
+    <insert id="insert" parameterType="com.system.exam.domain.qo.user.InsertQO">
+        <choose>
+            <when test="type=='teacher'.toString()">
+                insert into teacher(uuid,number,password,name,sex,tel,email,college_code,state)
+                values (uuid(),#{number},#{password},#{name},#{sex},#{tel},#{email},#{collegeCode},'1')
+            </when>
+            <when test="type=='student'.toString()">
+                insert into student(uuid,number,password,name,sex,tel,email,clazz_number,state)
+                values (uuid(),#{number},#{password},#{name},#{sex},#{tel},#{email},#{clazz},'1')
+            </when>
+            <otherwise>
+                insert into clazz(uuid,number,grade_year,college_code,name,state)
+                values (uuid(),#{clazz},#{year},#{collegeCode},#{major},'1')
+            </otherwise>
+        </choose>
     </insert>
     <!--所有学院-->
     <select id="listCollege" resultType="com.system.exam.domain.dto.common.MbDTO">
@@ -145,7 +158,7 @@
         WHERE state='1' and number=#{number}
     </select>
 
-    <select id="newClazz" resultType="com.system.exam.domain.dto.user.NewClazzDTO">
+    <select id="newClazz" resultType="com.system.exam.domain.dto.user.ClazzDTO">
         select
             college_code collegeCode,
             grade_year+1 year,
@@ -161,4 +174,19 @@
         select max(year)+1 from
         (select substring(number,1,4) year from student where state='1') tab
     </select>
+
+    <update id="graduated" parameterType="com.system.exam.domain.qo.user.GraduatedQO">
+        update clazz set state='0'
+        where grade_year=#{year}
+        <if test="collegeCode!=null and collegeCode!='0'.toString()">
+            and college_code=#{collegeCode}
+        </if>
+        <if test="clazz!=null and clazz!='0'.toString()">
+            and number=#{clazz}
+        </if>
+    </update>
+    <update id="graduatedStudent">
+        update student t set t.state='0'
+        where (select c.state from clazz c where t.clazz_number=c.number)!='1'
+    </update>
 </mapper>

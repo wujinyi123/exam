@@ -133,4 +133,14 @@ public class ManageController {
     public void newStuNum(HttpServletResponse response,String uuid) {
         manageService.newStuNum(response,uuid);
     }
+
+    /**
+     * 毕业操作
+     * @param graduatedQO
+     * @return
+     */
+    @PostMapping("/graduated")
+    public ResponseData<String> graduated(@RequestBody @Valid GraduatedQO graduatedQO) {
+        return ResponseDataUtil.buildSuccess(manageService.graduated(graduatedQO));
+    }
 }

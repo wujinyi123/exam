@@ -86,4 +86,11 @@ public interface ManageService {
      * @param uuid
      */
     void newStuNum(HttpServletResponse response,String uuid);
+
+    /**
+     * 毕业操作
+     * @param graduatedQO
+     * @return
+     */
+    String graduated(GraduatedQO graduatedQO);
 }

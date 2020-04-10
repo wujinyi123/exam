@@ -1,13 +1,12 @@
 package com.system.exam.service.user.impl;
 
-import com.system.exam.common.PageQO;
 import com.system.exam.domain.dto.common.MbDTO;
-import com.system.exam.domain.dto.exam.NewStuScoreDTO;
 import com.system.exam.domain.dto.user.*;
 import com.system.exam.domain.qo.user.*;
 import com.system.exam.mapper.user.ManageMapper;
 import com.system.exam.service.user.ManageService;
 import com.system.exam.util.ExcelUtil;
+import com.system.exam.util.Md5Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -163,17 +162,11 @@ public class ManageServiceImpl implements ManageService {
         listTitle.add("班级号（学院代码+年级+XX）");
         listTitle.add("专业");
 
-        List<NewClazzDTO> newClazzList = manageMapper.newClazz();
+        List<ClazzDTO> newClazzList = manageMapper.newClazz();
         List<List<String>> datas = new ArrayList<>();
 
-        List<String> list = null;
-        for (NewClazzDTO newClazz:newClazzList) {
-            list = new ArrayList<>();
-            list.add(newClazz.getCollegeCode());
-            list.add(newClazz.getYear());
-            list.add(newClazz.getClazz());
-            list.add(newClazz.getMajor());
-            datas.add(list);
+        for (ClazzDTO dto:newClazzList) {
+            datas.add(dtoToList(dto));
         }
         exportExcel(response,"新一届班级",listTitle,datas);
     }
@@ -281,6 +274,32 @@ public class ManageServiceImpl implements ManageService {
         }
     }
 
+    /**
+     * 毕业操作
+     * @param graduatedQO
+     * @return
+     */
+    @Override
+    public String graduated(GraduatedQO graduatedQO) {
+        String result = "";
+        int clazzs = manageMapper.graduated(graduatedQO);
+        int students = manageMapper.graduatedStudent();
+        result = "毕业班级"+clazzs+"个，毕业生"+students+"人";
+        if (clazzs==0 || students==0) {
+            result = "";
+        }
+        return result;
+    }
+
+    private List<String> dtoToList(ClazzDTO dto) {
+        List list = new ArrayList<>();
+        list.add(dto.getCollegeCode());
+        list.add(dto.getYear());
+        list.add(dto.getClazz());
+        list.add(dto.getMajor());
+        return list;
+    }
+
     private List<List<String>> getErrorDataList(List<String> errorData) {
         List<List<String>> datas = new ArrayList<>();
         List<String> list = null;
@@ -363,7 +382,6 @@ public class ManageServiceImpl implements ManageService {
         for (int i=0; i<list.size(); i++) {
             dataMsg = "";
             dataList = list.get(i);
-            insertQO.setDataList(dataList);
             if ("clazz".equals(insertQO.getType())) {
                 dataMsg = checkData(listCollege, dataList.get(0), "学院代码错误 ");
                 if ("".equals(dataList.get(0)) || "".equals(dataList.get(1))
@@ -407,7 +425,12 @@ public class ManageServiceImpl implements ManageService {
                 dataList.add(dataMsg);
                 insertDTO.getDataList().add(dataList);
             } else {
-                flag = manageMapper.insert(insertQO);
+                makeList(insertQO,dataList);
+                if ("0".equals(insertQO.getFlag())) {
+                    flag = 0;
+                } else {
+                    flag = manageMapper.insert(insertQO);
+                }
                 if (flag!=0) {
                     successSum++;
                 } else {
@@ -426,6 +449,43 @@ public class ManageServiceImpl implements ManageService {
         insertDTO.setUuid(uuid);
         redisTemplate.opsForValue().set(uuid, getErrorData(insertDTO.getDataList()), 30, TimeUnit.MINUTES);
         return insertDTO;
+    }
+
+    private void makeList(InsertQO insertQO,List<String> dataList) {
+        insertQO.setFlag("1");
+        switch (insertQO.getType()) {
+            case "clazz":{
+                insertQO.setCollegeCode(dataList.get(0));
+                insertQO.setYear(dataList.get(1));
+                insertQO.setClazz(dataList.get(2));
+                insertQO.setMajor(dataList.get(3));
+                break;
+            }
+            case "student":{
+                insertQO.setNumber(dataList.get(0));
+                insertQO.setName(dataList.get(1));
+                insertQO.setSex(dataList.get(2));
+                insertQO.setTel(dataList.get(3));
+                insertQO.setEmail(dataList.get(4));
+                insertQO.setClazz(dataList.get(6));
+                insertQO.setPassword(Md5Util.md5("123456"));
+                break;
+            }
+            case "teacher":{
+                insertQO.setNumber(dataList.get(0));
+                insertQO.setName(dataList.get(1));
+                insertQO.setSex(dataList.get(2));
+                insertQO.setTel(dataList.get(3));
+                insertQO.setEmail(dataList.get(4));
+                insertQO.setCollegeCode(dataList.get(5));
+                insertQO.setPassword(Md5Util.md5("123456"));
+                break;
+            }
+            default:{
+                insertQO.setFlag("0");
+                break;
+            }
+        }
     }
 
     private List<String> getErrorData(List<List<String>> dataList) {
