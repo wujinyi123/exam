@@ -8,6 +8,7 @@
             tab.examCode examCode,
             tab.examName examName,
             tab.score score,
+            tab.teacherNumber teacherNumber,
             tab.teacherName teacherName,
             tab.time time,
             tab.pdDate pdDate,
@@ -22,6 +23,7 @@
             t.exam_code examCode,
             t.exam_name examName,
             t.score score,
+            t.teacher_number teacherNumber,
             (select
             concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
             from teacher te
@@ -241,6 +243,7 @@
         select
             stu.number stuNumber,
             stu.name stuName,
+            if(stu.sex='M','男','女') sex,
             if(ans.score is null or ans.score='' and ans.score!='0','未参加',ans.score) stuScore,
             if(ans.use_time is null or ans.use_time='','--',ans.use_time) useTime,
             if(ans.submit_time is null or ans.submit_time='',

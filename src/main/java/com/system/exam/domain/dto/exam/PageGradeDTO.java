@@ -21,6 +21,11 @@ public class PageGradeDTO {
     private String stuName;
 
     /**
+     * 性别
+     */
+    private String sex;
+
+    /**
      * 学生成绩
      */
     private String stuScore;

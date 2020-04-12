@@ -5,7 +5,7 @@
     <select id="listExam" parameterType="string" resultType="com.system.exam.domain.dto.common.MbDTO">
         SELECT
             exam_code code,
-            exam_name name
+            concat('考试码：',exam_code,'，总分：',score,'，小测名称：',exam_name) name
         FROM exam
         WHERE state='1' AND teacher_number=#{number}
         order by pd_time desc,exp_time
