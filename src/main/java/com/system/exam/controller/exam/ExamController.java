@@ -45,15 +45,6 @@ public class ExamController {
     }
 
     /**
-     * 近期（5条）考试成绩 （学生）
-     * @return
-     */
-    @PostMapping("/listNewScore")
-    public ResponseData<List<ExamDTO>> listNewScore() {
-        return ResponseDataUtil.buildSuccess(examService.listNewScore());
-    }
-
-    /**
      * 成绩统计
      * @return
      */

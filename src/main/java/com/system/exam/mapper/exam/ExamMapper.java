@@ -26,13 +26,6 @@ public interface ExamMapper {
     List<ExamDTO> pageNewExam(NewExamQO newExamQO);
 
     /**
-     * 近期（5条）考试成绩 （学生）
-     * @param number
-     * @return
-     */
-    List<ExamDTO> listNewScore(String number);
-
-    /**
      * 进入考试
      * @param examQO
      * @return

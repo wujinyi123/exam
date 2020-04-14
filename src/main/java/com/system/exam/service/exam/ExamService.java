@@ -28,12 +28,6 @@ public interface ExamService {
     List<ExamDTO> pageNewExam(NewExamQO newExamQO);
 
     /**
-     * 近期（5条）考试成绩 （学生）
-     * @return
-     */
-    List<ExamDTO> listNewScore();
-
-    /**
      * 成绩统计
      * @param pageStuScoreQO
      * @return

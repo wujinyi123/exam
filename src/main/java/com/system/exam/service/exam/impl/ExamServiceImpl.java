@@ -72,19 +72,7 @@ public class ExamServiceImpl implements ExamService {
         //获取当前用户
         UserDTO userDTO = userSession.getUser("studentExamSystem");
         newExamQO.setNumber(userDTO.getNumber());
-        return examMapper.pageNewExam(newExamQO);
-    }
-
-    /**
-     * 近期（5条）考试成绩 （学生）
-     * @return
-     */
-    @Override
-    public List<ExamDTO> listNewScore() {
-        //获取当前用户
-        UserDTO userDTO = userSession.getUser("studentExamSystem");
-        List<ExamDTO> list =  examMapper.listNewScore(userDTO.getNumber());
-        return list;
+        return termList(examMapper.pageNewExam(newExamQO),newExamQO.getTerm());
     }
 
     /**
@@ -99,7 +87,24 @@ public class ExamServiceImpl implements ExamService {
             UserDTO userDTO = userSession.getUser("studentExamSystem");
             pageStuScoreQO.setStuNumber(userDTO.getNumber());
         }
-        return examMapper.pageStuScore(pageStuScoreQO);
+        return termList(examMapper.pageStuScore(pageStuScoreQO),pageStuScoreQO.getTerm());
+    }
+
+    private List<ExamDTO> termList(List<ExamDTO> list, String term) {
+        if (term==null || "".equals(term)) {
+            return list;
+        }
+
+        List<ExamDTO> result = new ArrayList<>();
+        for (ExamDTO dto:list) {
+            if (dto.getExamCode().indexOf(term)>=0
+                || dto.getExamName().indexOf(term)>=0
+                || dto.getTeacherName().indexOf(term)>=0) {
+                result.add(dto);
+            }
+        }
+
+        return result;
     }
 
 

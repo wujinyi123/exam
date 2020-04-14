@@ -43,33 +43,7 @@
             on em.clazz_number=ans.clazz_number and em.exam_code=ans.exam_code
         where t.state='1' and em.state='1' and ans.isFinish is null and t.exp_time>SYSDATE()
             and em.clazz_number=(select clazz_number from student where number=#{number})
-        <if test="term!=null and term!=''">
-            and (t.exam_code like concat('%',#{term},'%')
-            or t.exam_name like concat('%',#{term},'%')
-            or t.teacher_number like concat('%',#{term},'%')
-            or te.name like concat('%',#{term},'%')
-            or te.college_code like concat('%',#{term},'%')
-            or co.name like concat('%',#{term},'%'))
-        </if>
         ORDER BY t.exp_time,t.exam_code
-    </select>
-
-    <!--考试成绩 （学生）-->
-    <select id="listNewScore" parameterType="string" resultType="com.system.exam.domain.dto.exam.ExamDTO">
-        select
-            t.exam_code examCode,
-            t.exam_name examName,
-            t.score score,
-            concat(co.name,',',te.name,'老师') teacherName,
-            ans.use_time time,
-            ans.score myScore,
-            date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s') submitTime
-        from answer ans
-        left join exam t on ans.exam_code=t.exam_code
-        left join teacher te on t.teacher_number=te.number
-        left join college co on te.college_code=co.code
-        where ans.state='1' and t.state='1' and ans.student_number=#{number}
-        ORDER BY ans.submit_time desc LIMIT 5
     </select>
 
     <select id="pageStuScore" parameterType="com.system.exam.domain.qo.exam.PageStuScoreQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
@@ -87,13 +61,6 @@
         left join teacher te on t.teacher_number=te.number
         left join college co on te.college_code=co.code
         where ans.state='1' and t.state='1' and ans.student_number=#{stuNumber}
-        <if test="term!=null and term!=''">
-            and (t.exam_code like concat('%',#{term},'%')
-            or t.exam_name like concat('%',#{term},'%')
-            or co.name like concat('%',#{term},'%')
-            or co.code like concat('%',#{term},'%')
-            or te.name like concat('%',#{term},'%'))
-        </if>
         ORDER BY ans.submit_time desc
     </select>
 
