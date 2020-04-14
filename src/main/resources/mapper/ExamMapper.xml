@@ -36,12 +36,10 @@
         left join exam t on em.exam_code=t.exam_code
         left join teacher te on t.teacher_number=te.number
         left join college co on te.college_code=co.code
-        left join
-            (select stu.clazz_number clazz_number,a.exam_code exam_code,'1' isFinish
-            from answer a left join student stu on a.student_number=stu.number
-            where a.state='1' and stu.state='1' and a.student_number=#{number}) ans
-            on em.clazz_number=ans.clazz_number and em.exam_code=ans.exam_code
-        where t.state='1' and em.state='1' and ans.isFinish is null and t.exp_time>SYSDATE()
+        left join student stu on em.clazz_number=stu.clazz_number and stu.number=#{number}
+        left join answer ans on em.exam_code=ans.exam_code and ans.state='1' and stu.number=ans.student_number
+        where t.state='1' and em.state='1' and stu.state='1'
+         and ans.score is null and t.exp_time>SYSDATE()
             and em.clazz_number=(select clazz_number from student where number=#{number})
         ORDER BY t.exp_time,t.exam_code
     </select>
