@@ -5,36 +5,23 @@
     <!--查询考试码-->
     <select id="getExamByCode" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
         SELECT
-            tab.examCode examCode,
-            tab.examName examName,
-            tab.score score,
-            tab.teacherNumber teacherNumber,
-            tab.teacherName teacherName,
-            tab.time time,
-            tab.pdDate pdDate,
-            tab.expDate expDate,
-            if(tab.remark='0' and tab.exp &lt; SYSDATE(),'2',tab.remark) remark,
-            if(tab.remark='1',
-                (select score from answer
-                where exam_code=tab.examCode and student_number=#{number})
-                ,'') myScore
-        FROM
-        (SELECT
-            t.exam_code examCode,
-            t.exam_name examName,
-            t.score score,
-            t.teacher_number teacherNumber,
-            (select
-            concat((select name from college WHERE code=te.college_code),',',te.name,'老师')
-            from teacher te
-            where te.number=t.teacher_number) teacherName,
-            concat(t.time,'分钟') time,
-            date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
-            date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
-            t.exp_time exp,
-            (select count(1) from answer
-            where state='1' and exam_code=t.exam_code and student_number=#{number}) remark
-            FROM exam t where t.exam_code=#{examCode}) tab
+        t.exam_code examCode,
+        t.exam_name examName,
+        t.score score,
+        t.teacher_number teacherNumber,
+        concat(te.name,',',c.name) teacherName,
+        t.time time,
+        date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+        date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
+        t.exp_time exp,
+        if(t.exp_time &lt; SYSDATE(),'0','1') remark,
+        ans.score myScore
+        FROM exam t
+        left join teacher te on t.teacher_number=te.number
+        left join college c on te.college_code=c.code
+        left join answer ans on ans.exam_code=t.exam_code and ans.student_number=#{number}
+        where t.state='1' and te.state='1' and c.state='1'
+        and ans.state='1' and t.exam_code=#{examCode}
     </select>
 
     <!--获取未参加且未超过截止时间的考试（学生）-->
