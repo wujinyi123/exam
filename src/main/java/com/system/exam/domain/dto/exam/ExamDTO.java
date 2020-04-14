@@ -64,8 +64,7 @@ public class ExamDTO {
     private String expDate;
 
     /**
-     * 备注
-     * （学生）0：未参加，1：已参加，2：错过考试
+     * 是否已超时
      */
     private String remark;
 

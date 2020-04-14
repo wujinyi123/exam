@@ -5,23 +5,21 @@
     <!--查询考试码-->
     <select id="getExamByCode" parameterType="com.system.exam.domain.qo.exam.ExamQO" resultType="com.system.exam.domain.dto.exam.ExamDTO">
         SELECT
-        t.exam_code examCode,
-        t.exam_name examName,
-        t.score score,
-        t.teacher_number teacherNumber,
-        concat(te.name,',',c.name) teacherName,
-        t.time time,
-        date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
-        date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
-        t.exp_time exp,
-        if(t.exp_time &lt; SYSDATE(),'0','1') remark,
-        ans.score myScore
+            t.exam_code examCode,
+            t.exam_name examName,
+            t.score score,
+            t.teacher_number teacherNumber,
+            concat(te.name,',',c.name) teacherName,
+            t.time time,
+            date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
+            date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate,
+            if(t.exp_time &lt; SYSDATE(),'0','1') remark,
+            if(ans.score is not null and ans.score!='' and ans.state='1',ans.score,'无') myScore
         FROM exam t
         left join teacher te on t.teacher_number=te.number
         left join college c on te.college_code=c.code
         left join answer ans on ans.exam_code=t.exam_code and ans.student_number=#{number}
-        where t.state='1' and te.state='1' and c.state='1'
-        and ans.state='1' and t.exam_code=#{examCode}
+        where t.state='1' and te.state='1' and c.state='1' and t.exam_code=#{examCode}
     </select>
 
     <!--获取未参加且未超过截止时间的考试（学生）-->
@@ -31,14 +29,13 @@
             t.exam_name examName,
             t.score score,
             t.teacher_number teacherNumber,
-            concat(coll.name,',',teach.name) teacherName,
+            concat(te.name,',',co.name) teacherName,
             concat(t.time,'分钟') time,
-            date_format(t.pd_time,'%Y-%m-%d %H:%i:%s') pdDate,
             date_format(t.exp_time,'%Y-%m-%d %H:%i:%s') expDate
         from exam_message em
         left join exam t on em.exam_code=t.exam_code
-        left join teacher teach on t.teacher_number=teach.number
-        left join college coll on teach.college_code=coll.code
+        left join teacher te on t.teacher_number=te.number
+        left join college co on te.college_code=co.code
         left join
             (select stu.clazz_number clazz_number,a.exam_code exam_code,'1' isFinish
             from answer a left join student stu on a.student_number=stu.number
@@ -50,9 +47,9 @@
             and (t.exam_code like concat('%',#{term},'%')
             or t.exam_name like concat('%',#{term},'%')
             or t.teacher_number like concat('%',#{term},'%')
-            or teach.name like concat('%',#{term},'%')
-            or teach.college_code like concat('%',#{term},'%')
-            or coll.name like concat('%',#{term},'%'))
+            or te.name like concat('%',#{term},'%')
+            or te.college_code like concat('%',#{term},'%')
+            or co.name like concat('%',#{term},'%'))
         </if>
         ORDER BY t.exp_time,t.exam_code
     </select>
@@ -81,7 +78,7 @@
             t.exam_name examName,
             t.score score,
             te.number teacherNumber,
-            concat(co.name,',',te.name,'老师') teacherName,
+            concat(te.name,',',co.name) teacherName,
             ans.use_time time,
             ans.score myScore,
             date_format(ans.submit_time,'%Y-%m-%d %H:%i:%s') submitTime
